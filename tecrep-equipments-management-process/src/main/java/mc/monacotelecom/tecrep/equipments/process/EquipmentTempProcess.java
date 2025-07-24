@@ -53,7 +53,7 @@ public class EquipmentTempProcess {
                     .parse(reader);
             for (CSVRecord record : parser) {
                 EquipmentTemp temp = new EquipmentTemp();
-                temp.setPoNo(record.get("po_no"));
+                temp.setPoAncillaryeqmSapId(Long.valueOf(record.get("po_ancillaryeqm_sap_id")));
                 temp.setPartNo(record.get("part_no"));
                 temp.setBoxSn(record.get("box_sn"));
                 temp.setPodSn(record.get("pod_sn"));

@@ -20,8 +20,8 @@ public class EquipmentTemp implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "po_no")
-    private String poNo;
+    @Column(name = "po_ancillaryeqm_sap_id", nullable = false)
+    private Long poAncillaryeqmSapId;
 
     @Column(name = "part_no")
     private String partNo;
@@ -51,7 +51,7 @@ public class EquipmentTemp implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name = "status")
-    private String status = "pending";
+    private String status;
 
     @Column(name = "order_upload_id")
     private Long orderUploadId;

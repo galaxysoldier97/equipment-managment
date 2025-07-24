@@ -3,6 +3,8 @@
 ## 2.30.0
 * Added po_ancillary_equipment_sap and homologacion_material_sap tables
 * Updated equipments_temp table with po_ancillaryeqm_sap_id column
+* Added entities and repositories for the new tables
+* Updated EquipmentTemp entity to use the new column name
 
 ## 2.29.0
 * Added status and order_upload_id columns to equipments_temp table
