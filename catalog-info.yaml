@@ -1,0 +1,56 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: equipments-management-service
+  links:
+    - title: Repository
+      url: https://gitlab.steelhome.internal/mtmc/projects/it-factory/gi/equipments-management/equipments-management
+    - title: Database Migration
+      url: https://gitlab.steelhome.internal/mtmc/projects/it-factory/gi/equipments-management/equipments-management-liquibase-dbmdl
+    - title: Cleanup cronjob
+      url: https://gitlab.steelhome.internal/mtmc/projects/it-factory/gi/equipments-management/equipments-management-cleaning-job
+    - title: Incoming files watcher cronjob
+      url: https://gitlab.steelhome.internal/mtmc/projects/it-factory/gi/equipments-management/equipments-management-watcher
+  annotations:
+    gitlab.com/project-id: '820'
+    sonarqube.org/project-key: tecrep-equipments-management
+spec:
+  type: service
+  lifecycle: production
+  owner: user:jlethiec
+  system: galaxion
+  dependsOn: [ resource:tecrep-equipments-management-db ]
+  consumesApis: [ ]
+  providesApis: [ tecrep-equipments-management-api-V1,tecrep-equipments-management-api-V2 ]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: tecrep-equipments-management-db
+spec:
+  type: database
+  owner: user:jlethiec
+  system: galaxion
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: tecrep-equipments-management-api-V1
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:jlethiec
+  definition:
+    $text: docs/api/stable-v2.20.0.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: tecrep-equipments-management-api-V2
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:jlethiec
+  definition:
+    $text: docs/api/stable-v2.21.0.yaml

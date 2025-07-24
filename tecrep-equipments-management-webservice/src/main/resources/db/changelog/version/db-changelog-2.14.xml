@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="j.lethiec" id="GI-647-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="simcard" indexName="idx_em_pack" columnNames="pack_id"/>
+            </not>
+        </preConditions>
+
+        <!-- Add index on simcard.pack_id -->
+        <createIndex tableName="simcard" indexName="idx_em_pack">
+            <column name="pack_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-647-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="simcard" indexName="idx_em_nr" columnNames="number"/>
+            </not>
+        </preConditions>
+
+        <!-- Add index on simcard.number -->
+        <createIndex tableName="simcard" indexName="idx_em_nr">
+            <column name="number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="GI-656-1" author="g.fantappie">
+        <!-- updating value PREPAY -> MOBILE in table provider -->
+        <update tableName="provider">
+            <column name="access_type" value="MOBILE"/>
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-2" author="g.fantappie">
+        <!-- updating value PREPAY -> MOBILE in table equipment -->
+        <update tableName="equipment">
+            <column name="access_type" value="MOBILE"/>
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-3" author="g.fantappie">
+        <!-- Removed value PREPAY -->
+        <modifyDataType tableName="provider" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GI-656-4" author="g.fantappie">
+        <!-- Removed value PREPAY -->
+        <modifyDataType tableName="equipment" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GI-656-5" author="g.fantappie">
+        <!-- updating value PREPAY -> MOBILE in table provider_aud -->
+        <update tableName="provider_aud">
+            <column name="access_type"/>
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-6" author="g.fantappie">
+        <!-- updating value PREPAY -> MOBILE in table equipment_aud -->
+        <update tableName="equipment_aud">
+            <column name="access_type"/>
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-7" author="j.lethiec">
+        <!-- updating value PREPAY -> MOBILE in table equipment_model -->
+        <update tableName="equipment_model">
+            <column name="access_type" value="MOBILE"/>
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-8" author="j.lethiec">
+        <!-- Removed value PREPAY from equipment_model-->
+        <modifyDataType tableName="equipment_model" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'MOBILE')"/>
+    </changeSet>
+</databaseChangeLog>

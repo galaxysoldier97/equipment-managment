@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="MTOSS-860-1" author="g.fantappie">
+        <!-- Created table job_history-->
+        <createTable tableName="job_history">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="start" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end" type="TIMESTAMP"/>
+            <column name="status" type="enum('STARTED','COMPLETED','FAILED')"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="MTOSS-860-2" author="g.fantappie">
+        <!-- Created table job_configuration-->
+        <!-- Create inventory pool configuration table-->
+        <createTable tableName="job_configuration">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="days" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status"
+                    type="ENUM('INSTORE', 'AVAILABLE', 'BOOKED', 'ASSIGNED', 'ACTIVATED','DEACTIVATED','ONHOLD','RETURNED','NOTRETURNED','DEPRECATED','REPACKAGING')"/>
+            <column name="recyclable" type="bit"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="MTOSS-1265-1" author="g.fantappie">
+        <!-- Added new column activation_date to equipment table-->
+        <addColumn tableName="equipment">
+            <column name="activation_date" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1318-1" author="g.fantappie">
+        <!-- Added column assignment_date to equipment table -->
+        <addColumn tableName="equipment">
+            <column name="assigment_date" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

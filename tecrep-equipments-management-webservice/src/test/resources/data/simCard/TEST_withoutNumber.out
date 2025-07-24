@@ -1,0 +1,29 @@
+*************************************
+*     HEADER DESCRIPTION   *
+*************************************
+Customer : METEOR MOBILE COMMUNICATIONS
+Quantity : 2
+Type : UNIVERSAL
+Batch : 1
+
+Address1: PRODUCTION MANAGER
+Address2: Sigma Telecom
+Address3: McKee Avenue
+Address4: Finglas
+Address5: DUBLIN 11
+Address6: IRELAND
+Transport_Key: 005
+Artwork: MET_UNIVERS
+SIM_Reference: MET PP001
+*
+****************************
+*    INPUT VARIABLES       *
+****************************
+Var_In: IMSI/ICCID/MSISDN
+****************************
+*    OUTPUT VARIABLES      *
+****************************
+Var_Out: Ki/PIN1/PUK1/PIN2/PUK2/ADM1
+***************************************
+123456789012345 8937710330000000072F       J3NLYXM3FQF9IPOD1FXAHCPH498Y51SE 1974 58347693 2815 34859960 ELEBW182OQCO9TSY
+280101633110002 8935733620311100026F       SGL1V3XTXG6B3978Q9ZH0JF28YD27G4Y 1247 52520069 8978 00517926 508E37PNF1MYOXO0

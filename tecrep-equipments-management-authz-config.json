@@ -1,0 +1,1269 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "name": "simcards",
+      "uris": [
+        "/private/auth/simcards/*",
+        "/api/v1/private/auth/simcards/*",
+        "/api/v2/private/auth/simcards/*"
+      ],
+      "scopes": [
+        {
+          "name": "simcards_create"
+        },
+        {
+          "name": "simcards_read"
+        },
+        {
+          "name": "simcards_update"
+        },
+        {
+          "name": "simcards_delete"
+        }
+      ]
+    },
+    {
+      "name": "cpes",
+      "uris": [
+        "/private/auth/cpes/*",
+        "/api/v1/private/auth/cpes/*",
+        "/api/v2/private/auth/cpes/*"
+      ],
+      "scopes": [
+        {
+          "name": "cpes_create"
+        },
+        {
+          "name": "cpes_read"
+        },
+        {
+          "name": "cpes_update"
+        },
+        {
+          "name": "cpes_delete"
+        }
+      ]
+    },
+    {
+      "name": "ancillaryequipments",
+      "uris": [
+        "/private/auth/ancillaryequipments/*",
+        "/api/v1/private/auth/ancillaryequipments/*",
+        "/api/v2/private/auth/ancillaryequipments/*"
+      ],
+      "scopes": [
+        {
+          "name": "ancillaryequipments_create"
+        },
+        {
+          "name": "ancillaryequipments_read"
+        },
+        {
+          "name": "ancillaryequipments_update"
+        },
+        {
+          "name": "ancillaryequipments_delete"
+        }
+      ]
+    },
+    {
+      "name": "plmns",
+      "uris": [
+        "/private/auth/plmns/*",
+        "/api/v1/private/auth/plmns/*",
+        "/api/v2/private/auth/plmns/*"
+      ],
+      "scopes": [
+        {
+          "name": "plmns_create"
+        },
+        {
+          "name": "plmns_read"
+        },
+        {
+          "name": "plmns_update"
+        },
+        {
+          "name": "plmns_delete"
+        }
+      ]
+    },
+    {
+      "name": "providers",
+      "uris": [
+        "/private/auth/providers/*",
+        "/api/v1/private/auth/providers/*",
+        "/api/v2/private/auth/providers/*"
+      ],
+      "scopes": [
+        {
+          "name": "providers_create"
+        },
+        {
+          "name": "providers_read"
+        },
+        {
+          "name": "providers_update"
+        },
+        {
+          "name": "providers_delete"
+        }
+      ]
+    },
+    {
+      "name": "warehouses",
+      "uris": [
+        "/private/auth/warehouses/*",
+        "/api/v1/private/auth/warehouses/*",
+        "/api/v2/private/auth/warehouses/*"
+      ],
+      "scopes": [
+        {
+          "name": "warehouses_create"
+        },
+        {
+          "name": "warehouses_read"
+        },
+        {
+          "name": "warehouses_update"
+        },
+        {
+          "name": "warehouses_delete"
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "uris": [
+        "/private/auth/equipmentsDashboard",
+        "/api/v1/private/auth/equipmentsDashboard/*"
+      ],
+      "scopes": [
+        {
+          "name": "dashboard_read"
+        }
+      ]
+    },
+    {
+      "name": "importers",
+      "uris": [
+        "/private/auth/import/*",
+        "/api/v1/private/auth/import/*"
+      ],
+      "scopes": [
+        {
+          "name": "import_read"
+        },
+        {
+          "name": "import_write"
+        },
+        {
+          "name": "import_delete"
+        }
+      ]
+    },
+    {
+      "name": "allotments",
+      "uris": [
+        "/private/auth/allotments/*",
+        "/api/v1/private/auth/allotments/*"
+      ],
+      "scopes": [
+        {
+          "name": "allotments_create"
+        },
+        {
+          "name": "allotments_read"
+        },
+        {
+          "name": "allotments_update"
+        },
+        {
+          "name": "allotments_delete"
+        }
+      ]
+    },
+    {
+      "name": "batches",
+      "uris": [
+        "/private/auth/batch/*",
+        "/api/v1/private/auth/batch/*"
+      ],
+      "scopes": [
+        {
+          "name": "batches_create"
+        },
+        {
+          "name": "batches_read"
+        },
+        {
+          "name": "batches_update"
+        },
+        {
+          "name": "batches_delete"
+        }
+      ]
+    },
+    {
+      "name": "equipmentModels",
+      "uris": [
+        "/private/auth/equipmentModels/*",
+        "/api/v1/private/auth/equipmentModels/*",
+        "/api/v2/private/auth/equipmentModels/*"
+      ],
+      "scopes": [
+        {
+          "name": "equipmentModels_create"
+        },
+        {
+          "name": "equipmentModels_read"
+        },
+        {
+          "name": "equipmentModels_update"
+        },
+        {
+          "name": "equipmentModels_delete"
+        }
+      ]
+    },
+    {
+      "name": "fileConfigurations",
+      "uris": [
+        "/private/auth/fileConfiguration/*",
+        "/api/v1/private/auth/fileConfiguration/*"
+      ],
+      "scopes": [
+        {
+          "name": "fileConfigurations_create"
+        },
+        {
+          "name": "fileConfigurations_read"
+        },
+        {
+          "name": "fileConfigurations_update"
+        },
+        {
+          "name": "fileConfigurations_delete"
+        }
+      ]
+    },
+    {
+      "name": "inventorypools",
+      "uris": [
+        "/private/auth/inventorypools/*",
+        "/api/v1/private/auth/inventorypools/*",
+        "/api/v2/private/auth/inventorypools/*"
+      ],
+      "scopes": [
+        {
+          "name": "inventorypools_create"
+        },
+        {
+          "name": "inventorypools_read"
+        },
+        {
+          "name": "inventorypools_update"
+        },
+        {
+          "name": "inventorypools_delete"
+        }
+      ]
+    },
+    {
+      "name": "simGenerationConfigurations",
+      "uris": [
+        "/private/auth/simGenerationConfigurations/*",
+        "/api/v1/private/auth/simGenerationConfigurations/*",
+        "/api/v2/private/auth/simGenerationConfigurations/*"
+      ],
+      "scopes": [
+        {
+          "name": "simGenerationConfigurations_create"
+        },
+        {
+          "name": "simGenerationConfigurations_read"
+        },
+        {
+          "name": "simGenerationConfigurations_update"
+        },
+        {
+          "name": "simGenerationConfigurations_delete"
+        }
+      ]
+    },
+    {
+      "name": "job",
+      "uris": [
+        "/api/v1/private/auth/job/*"
+      ],
+      "scopes": [
+        {
+          "name": "job_create"
+        },
+        {
+          "name": "job_read"
+        },
+        {
+          "name": "job_update"
+        },
+        {
+          "name": "job_delete"
+        }
+      ]
+    },
+    {
+      "name": "sequences",
+      "uris": [
+        "/api/v1/private/auth/sequences/*"
+      ],
+      "scopes": [
+        {
+          "name": "sequence_create"
+        },
+        {
+          "name": "sequence_read"
+        },
+        {
+          "name": "sequence_delete"
+        }
+      ]
+    },
+    {
+      "name": "equipmentstemp",
+      "uris": [
+        "/private/auth/equipmentstemp/*",
+        "/api/v1/private/auth/equipmentstemp/*"
+      ],
+      "scopes": [
+        {
+          "name": "equipmentstemp_create"
+        },
+        {
+          "name": "equipmentstemp_read"
+        },
+        {
+          "name": "equipmentstemp_update"
+        },
+        {
+          "name": "equipmentstemp_delete"
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "name": "has_read_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"tecrep-equipments-management/EQUIPMENT_READ\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "has_write_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"tecrep-equipments-management/EQUIPMENT_WRITE\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "has_delete_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"tecrep-equipments-management/EQUIPMENT_DELETE\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "can_create_simcards",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simcards\"]",
+        "scopes": "[\"simcards_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_simcards",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simcards\"]",
+        "scopes": "[\"simcards_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_simcards",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simcards\"]",
+        "scopes": "[\"simcards_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_simcards",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simcards\"]",
+        "scopes": "[\"simcards_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_cpes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"cpes\"]",
+        "scopes": "[\"cpes_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_cpes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"cpes\"]",
+        "scopes": "[\"cpes_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_cpes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"cpes\"]",
+        "scopes": "[\"cpes_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_cpes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"cpes\"]",
+        "scopes": "[\"cpes_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_ancillaryequipments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"ancillaryequipments\"]",
+        "scopes": "[\"ancillaryequipments_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_ancillaryequipments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"ancillaryequipments\"]",
+        "scopes": "[\"ancillaryequipments_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_ancillaryequipments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"ancillaryequipments\"]",
+        "scopes": "[\"ancillaryequipments_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_ancillaryequipments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"ancillaryequipments\"]",
+        "scopes": "[\"ancillaryequipments_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_plmns",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"plmns\"]",
+        "scopes": "[\"plmns_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_plmns",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"plmns\"]",
+        "scopes": "[\"plmns_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_plmns",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"plmns\"]",
+        "scopes": "[\"plmns_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_plmns",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"plmns\"]",
+        "scopes": "[\"plmns_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_providers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"providers\"]",
+        "scopes": "[\"providers_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_providers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"providers\"]",
+        "scopes": "[\"providers_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_providers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"providers\"]",
+        "scopes": "[\"providers_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_providers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"providers\"]",
+        "scopes": "[\"providers_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_warehouses",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"warehouses\"]",
+        "scopes": "[\"warehouses_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_warehouses",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"warehouses\"]",
+        "scopes": "[\"warehouses_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_warehouses",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"warehouses\"]",
+        "scopes": "[\"warehouses_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_warehouses",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"warehouses\"]",
+        "scopes": "[\"warehouses_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_read_dashboard",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"dashboard\"]",
+        "scopes": "[\"dashboard_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_read_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_write_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_write\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_allotments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"allotments\"]",
+        "scopes": "[\"allotments_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_allotments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"allotments\"]",
+        "scopes": "[\"allotments_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_allotments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"allotments\"]",
+        "scopes": "[\"allotments_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_allotments",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"allotments\"]",
+        "scopes": "[\"allotments_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_batches",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"batches\"]",
+        "scopes": "[\"batches_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_batches",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"batches\"]",
+        "scopes": "[\"batches_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_batches",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"batches\"]",
+        "scopes": "[\"batches_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_batches",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"batches\"]",
+        "scopes": "[\"batches_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_equipmentModels",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentModels\"]",
+        "scopes": "[\"equipmentModels_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_equipmentModels",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentModels\"]",
+        "scopes": "[\"equipmentModels_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_equipmentModels",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentModels\"]",
+        "scopes": "[\"equipmentModels_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_equipmentModels",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentModels\"]",
+        "scopes": "[\"equipmentModels_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_fileConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"fileConfigurations\"]",
+        "scopes": "[\"fileConfigurations_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_fileConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"fileConfigurations\"]",
+        "scopes": "[\"fileConfigurations_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_fileConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"fileConfigurations\"]",
+        "scopes": "[\"fileConfigurations_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_fileConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"fileConfigurations\"]",
+        "scopes": "[\"fileConfigurations_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_inventorypools",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"inventorypools\"]",
+        "scopes": "[\"inventorypools_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_inventorypools",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"inventorypools\"]",
+        "scopes": "[\"inventorypools_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_inventorypools",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"inventorypools\"]",
+        "scopes": "[\"inventorypools_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_inventorypools",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"inventorypools\"]",
+        "scopes": "[\"inventorypools_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_simGenerationConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simGenerationConfigurations\"]",
+        "scopes": "[\"simGenerationConfigurations_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_simGenerationConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simGenerationConfigurations\"]",
+        "scopes": "[\"simGenerationConfigurations_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_simGenerationConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simGenerationConfigurations\"]",
+        "scopes": "[\"simGenerationConfigurations_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_simGenerationConfigurations",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"simGenerationConfigurations\"]",
+        "scopes": "[\"simGenerationConfigurations_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_sequence",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"sequences\"]",
+        "scopes": "[\"sequence_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_sequence",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"sequences\"]",
+        "scopes": "[\"sequence_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_sequence",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"sequences\"]",
+        "scopes": "[\"sequence_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_equipmentstemp",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentstemp\"]",
+        "scopes": "[\"equipmentstemp_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_equipmentstemp",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentstemp\"]",
+        "scopes": "[\"equipmentstemp_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_equipmentstemp",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentstemp\"]",
+        "scopes": "[\"equipmentstemp_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_equipmentstemp",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"equipmentstemp\"]",
+        "scopes": "[\"equipmentstemp_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "name": "simcards_create"
+    },
+    {
+      "name": "simcards_read"
+    },
+    {
+      "name": "simcards_update"
+    },
+    {
+      "name": "simcards_delete"
+    },
+    {
+      "name": "cpes_create"
+    },
+    {
+      "name": "cpes_read"
+    },
+    {
+      "name": "cpes_update"
+    },
+    {
+      "name": "cpes_delete"
+    },
+    {
+      "name": "ancillaryequipments_create"
+    },
+    {
+      "name": "ancillaryequipments_read"
+    },
+    {
+      "name": "ancillaryequipments_update"
+    },
+    {
+      "name": "ancillaryequipments_delete"
+    },
+    {
+      "name": "plmns_create"
+    },
+    {
+      "name": "plmns_read"
+    },
+    {
+      "name": "plmns_update"
+    },
+    {
+      "name": "plmns_delete"
+    },
+    {
+      "name": "providers_create"
+    },
+    {
+      "name": "providers_read"
+    },
+    {
+      "name": "providers_update"
+    },
+    {
+      "name": "providers_delete"
+    },
+    {
+      "name": "warehouses_create"
+    },
+    {
+      "name": "warehouses_read"
+    },
+    {
+      "name": "warehouses_update"
+    },
+    {
+      "name": "warehouses_delete"
+    },
+    {
+      "name": "dashboard_read"
+    },
+    {
+      "name": "import_read"
+    },
+    {
+      "name": "import_write"
+    },
+    {
+      "name": "import_delete"
+    },
+    {
+      "name": "allotments_create"
+    },
+    {
+      "name": "allotments_read"
+    },
+    {
+      "name": "allotments_update"
+    },
+    {
+      "name": "allotments_delete"
+    },
+    {
+      "name": "batches_create"
+    },
+    {
+      "name": "batches_read"
+    },
+    {
+      "name": "batches_update"
+    },
+    {
+      "name": "batches_delete"
+    },
+    {
+      "name": "equipmentModels_create"
+    },
+    {
+      "name": "equipmentModels_read"
+    },
+    {
+      "name": "equipmentModels_update"
+    },
+    {
+      "name": "equipmentModels_delete"
+    },
+    {
+      "name": "fileConfigurations_create"
+    },
+    {
+      "name": "fileConfigurations_read"
+    },
+    {
+      "name": "fileConfigurations_update"
+    },
+    {
+      "name": "fileConfigurations_delete"
+    },
+    {
+      "name": "inventorypools_create"
+    },
+    {
+      "name": "inventorypools_read"
+    },
+    {
+      "name": "inventorypools_update"
+    },
+    {
+      "name": "inventorypools_delete"
+    },
+    {
+      "name": "simGenerationConfigurations_create"
+    },
+    {
+      "name": "simGenerationConfigurations_read"
+    },
+    {
+      "name": "simGenerationConfigurations_update"
+    },
+    {
+      "name": "simGenerationConfigurations_delete"
+    },
+    {
+      "name": "job_create"
+    },
+    {
+      "name": "job_read"
+    },
+    {
+      "name": "job_update"
+    },
+    {
+      "name": "job_delete"
+    },
+    {
+      "name": "sequence_create"
+    },
+    {
+      "name": "sequence_read"
+    },
+    {
+      "name": "sequence_delete"
+    },
+    {
+      "name": "equipmentstemp_create"
+    },
+    {
+      "name": "equipmentstemp_read"
+    },
+    {
+      "name": "equipmentstemp_update"
+    },
+    {
+      "name": "equipmentstemp_delete"
+    }
+  ],
+  "decisionStrategy": "UNANIMOUS"
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="b.nzonlia" id="GOSS-493-1">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="ancillary_equipment" columnName="independent_mode"/>
+        </preConditions>
+        <dropColumn tableName="ancillary_equipment">
+            <column name="independent_mode"/>
+        </dropColumn>
+        </changeSet>
+
+    <changeSet author="b.nzonlia" id="GOSS-493-2">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="ancillary_equipment_aud" columnName="independent_mode"/>
+        </preConditions>
+        <dropColumn tableName="ancillary_equipment_aud">
+            <column name="independent_mode"/>
+        </dropColumn>
+    </changeSet>
+    
+    <changeSet id="GOSS-884-1" author="j.lethiec">
+        <!-- Increase capacity of admin_code column to support change in MT simcard import -->
+        <modifyDataType tableName="simcard" columnName="admin_code" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-884-2" author="j.lethiec">
+        <!-- Increase capacity of admin_code column to support change in MT simcard import -->
+        <modifyDataType tableName="simcard_aud" columnName="admin_code" newDataType="varchar(32)"/>
+    </changeSet>
+</databaseChangeLog>

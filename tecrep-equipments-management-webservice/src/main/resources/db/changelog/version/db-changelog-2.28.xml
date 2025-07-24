@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+ 
+    <changeSet id="20250605-1-create-ancillary-import-job" author="fmarchena">
+        <createTable tableName="ancillary_import_job">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="original_filename" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="format" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="continue_on_error" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_lines" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="successful_lines" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="error_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="finished_at" type="DATETIME"/>
+            <column name="input_file_path" type="VARCHAR(1024)"/>
+            <column name="result_file_path" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+ 
+  <changeSet id="20250605-2-create-ancillary-import-error" author="fmarchena">
+        <createTable tableName="ancillary_import_error">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <!-- Columna job_id: no nula y se relativiza a ancillary_import_job.id -->
+            <column name="job_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="line_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="error_message" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="original_line" type="VARCHAR(1024)"/>
+        </createTable>
+
+        <!-- Índice opcional para acelerar búsquedas por job_id -->
+        <createIndex indexName="idx_anc_err_job_id"
+                     tableName="ancillary_import_error">
+            <column name="job_id"/>
+        </createIndex>
+
+        <!-- Clave foránea hacia ancillary_import_job(id) -->
+        <addForeignKeyConstraint
+                constraintName="fk_ancillary_import_err_job"
+                baseTableName="ancillary_import_error"
+                baseColumnNames="job_id"
+                referencedTableName="ancillary_import_job"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+
+        <!-- ChangeSet para añadir la columna equipment_name a la tabla equipment_model -->
+    <changeSet id="20250605-3-add-equipment-name-to-equipment-model" author="sheyla">
+        <addColumn tableName="equipment_model">
+            <column name="equipment_name"
+                    type="ENUM('BRDBOX','HDD','ONT','STB')"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

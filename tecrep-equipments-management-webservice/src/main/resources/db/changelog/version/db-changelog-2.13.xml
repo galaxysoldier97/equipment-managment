@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="GI-612-1" author="j.lethiec">
+        <!-- Modify transport_key from Integer to String for SIM table -->
+        <modifyDataType tableName="simcard" columnName="transportKey" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-612-2" author="j.lethiec">
+        <!-- Modify transport_key from Integer to String for SIM audit table -->
+        <modifyDataType tableName="simcard_aud" columnName="transportKey" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-612-3" author="j.lethiec">
+        <!-- Modify transport_key from Integer to String for SIM Generation Configuration table -->
+        <modifyDataType tableName="simcard_generation" columnName="transportKey" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-604-1" author="j.lethiec">
+        <!-- Add column name on ICCID sequence, to manage multiple different sequences at a time -->
+        <addColumn tableName="SEQUENCE_ICCID">
+            <column name="name" type="varchar(30)" defaultValue="DEFAULT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-604-2" author="j.lethiec">
+        <!-- Add a column in simcard_generation to link to a iccid_sequence -->
+        <addColumn tableName="simcard_generation">
+            <column name="iccid_sequence" type="varchar(30)" defaultValue="DEFAULT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

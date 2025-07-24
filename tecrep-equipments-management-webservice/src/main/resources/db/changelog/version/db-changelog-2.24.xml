@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="MTOSS-1775-1" author="r.chouchane">
+        <createIndex tableName="simcard" indexName="idx_puk_1_code">
+            <column name="puk1_code"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="MTOSS-1775-2" author="r.chouchane">
+    <createIndex tableName="simcard" indexName="idx_puk_2_code">
+        <column name="puk2_code"/>
+    </createIndex>
+    </changeSet>
+</databaseChangeLog>

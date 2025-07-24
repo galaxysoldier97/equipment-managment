@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet author="tecrep" id="create-equipments-temp-table">
+        <createTable tableName="equipments_temp">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="po_no" type="VARCHAR(255)"/>
+            <column name="part_no" type="VARCHAR(255)"/>
+            <column name="box_sn" type="VARCHAR(255)"/>
+            <column name="pod_sn" type="VARCHAR(255)"/>
+            <column name="scanned" type="BOOLEAN"/>
+            <column name="scanned_at" type="TIMESTAMP"/>
+            <column name="model_id" type="BIGINT"/>
+            <column name="uploaded_by" type="VARCHAR(255)"/>
+            <column name="session_id" type="CHAR(36)"/>
+            <column name="order_upload_id" type="BIGINT"/>
+            <column name="status" type="VARCHAR(32)" defaultValue="pending">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_id" type="BIGINT"/>
+            <column name="process_date" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="tecrep" id="equipments-temp-unique">
+        <addUniqueConstraint tableName="equipments_temp"
+                             columnNames="box_sn, pod_sn"
+                             constraintName="uk_equipments_temp_box_pod"/>
+    </changeSet>
+
+</databaseChangeLog>

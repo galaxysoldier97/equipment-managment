@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="GI-719-1" author="j.lethiec">
+        <comment>Align allotment_summary_aud.batch_number type</comment>
+        <modifyDataType tableName="allotment_summary_aud" columnName="batch_number" newDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="GI-719-2" author="j.lethiec">
+        <comment>Align auditenversinfo.id type</comment>
+        <modifyDataType tableName="auditenversinfo" columnName="id" newDataType="integer auto_increment"/>
+    </changeSet>
+
+    <changeSet id="GI-719-3" author="j.lethiec">
+        <comment>Align simcard_aud.algorithmVersion type</comment>
+        <modifyDataType tableName="simcard_aud" columnName="algorithmVersion" newDataType="int(11)"/>
+    </changeSet>
+
+    <changeSet id="GI-719-4" author="j.lethiec">
+        <comment>Align simcard_aud.checkDigit type</comment>
+        <modifyDataType tableName="simcard_aud" columnName="checkDigit" newDataType="int(11)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-1" author="g.fantappie">
+        <modifyDataType tableName="ancillary_equipment_aud" columnName="equipment_name" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-2" author="g.fantappie">
+        <modifyDataType tableName="cpe_aud" columnName="usage" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-3" author="g.fantappie">
+        <modifyDataType tableName="equipment_aud" columnName="status" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-4" author="g.fantappie">
+        <modifyDataType tableName="equipment_aud" columnName="nature" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-5" author="g.fantappie">
+        <modifyDataType tableName="equipment_aud" columnName="category" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-6" author="g.fantappie">
+        <modifyDataType tableName="simcard_aud" columnName="sim_profile" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-710-1" author="g.fantappie">
+        <!-- Add allotment_number to allotment_summary table-->
+        <addColumn tableName="allotment_summary">
+            <column name="allotment_number" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-710-2" author="g.fantappie">
+        <!-- Add allotment_number to allotment_summary_aud table-->
+        <addColumn tableName="allotment_summary_aud">
+            <column name="allotment_number" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-710-3" author="g.fantappie">
+        <!-- Populated allotment_number column for retro compatibility-->
+        <sql>
+            UPDATE allotment_summary a
+            inner join
+            (SELECT
+            al.allotment_id,
+            ROW_NUMBER() OVER (partition by batch_number ORDER BY al.allotment_id asc) AS RN
+            FROM allotment_summary al) as r on a.allotment_id = r.allotment_id
+            set a.allotment_number = RN
+            where a.batch_number is not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="GI-710-4" author="g.fantappie">
+        <!-- Added not null constraint to allotment_number-->
+        <addNotNullConstraint tableName="allotment_summary" columnName="allotment_number" columnDataType="INT"/>
+    </changeSet>
+
+    <changeSet id="GI-711-1" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="allotment_summary_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to allotment_summary_aud-->
+        <addPrimaryKey tableName="allotment_summary_aud" columnNames="allotment_id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-2" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="ancillary_equipment_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to ancillary_equipment_aud-->
+        <addPrimaryKey tableName="ancillary_equipment_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-3" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="cpe_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to cpe_aud-->
+        <addPrimaryKey tableName="cpe_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-4" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="simcard_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to simcard_aud-->
+        <addPrimaryKey tableName="simcard_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-5" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="equipment_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to equipment_aud-->
+        <addPrimaryKey tableName="equipment_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-6" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="batch_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to batch_aud-->
+        <addPrimaryKey tableName="batch_aud" columnNames="batch_number, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-7" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="plmn_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to plmn_aud-->
+        <addPrimaryKey tableName="plmn_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-8" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provider_aud" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to provider_aud-->
+        <addPrimaryKey tableName="provider_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-9" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="DATABASECHANGELOG" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to DATABASECHANGELOG-->
+        <addPrimaryKey tableName="DATABASECHANGELOG" columnNames="id, author, filename"/>
+    </changeSet>
+</databaseChangeLog>

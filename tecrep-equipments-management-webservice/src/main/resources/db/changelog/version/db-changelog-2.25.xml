@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="MTOSS-1907-1" author="g.fantappie">
+        <!-- Add column brand to table simcard-->
+        <addColumn tableName="simcard">
+            <column name="brand" type="varchar(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1907-2" author="g.fantappie">
+        <!-- Add column brand to table simcard aud-->
+        <addColumn tableName="simcard_aud">
+            <column name="brand" type="varchar(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1981-1" author="g.fantappie">
+        <addColumn tableName="equipment_aud">
+            <column name="warehouse_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1981-2" author="g.fantappie">
+        <!-- Populate field warehouse_id for equipment_table-->
+        <sql>
+            update equipment_aud
+            inner join equipment
+            on equipment_aud.id = equipment.id
+            set equipment_aud.warehouse_id = equipment.warehouse_id
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-1" author="g.fantappie">
+        <!-- Modifying sim_profile type to varchar(32)-->
+        <modifyDataType tableName="simcard" columnName="sim_profile" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-2" author="g.fantappie">
+        <!-- Modifying sim_profile type to varchar(32)-->
+        <modifyDataType tableName="simcard_aud" columnName="sim_profile" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-3" author="g.fantappie">
+        <!-- Updating simProfile with new values for simcard-->
+        <sql>
+            update simcard
+            set sim_profile = case
+            when is_esim then '0E.00'
+            end;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-4" author="g.fantappie">
+        <!-- Updating simProfile with new values for simcard_aud-->
+        <sql>
+            update simcard_aud
+            set sim_profile = case
+            when is_esim then '0E.00'
+            end;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-5" author="g.fantappie">
+        <!-- Adding new column qrCode to simcard-->
+        <addColumn tableName="simcard">
+            <column name="qr_code" type="varchar(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1879-6" author="g.fantappie">
+        <!-- Adding new column qrCode to simcard-->
+        <modifyDataType tableName="simcard" columnName="qr_code" newDataType="longtext"/>
+    </changeSet>
+
+</databaseChangeLog>

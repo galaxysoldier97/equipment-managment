@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+  <changeSet id="tecrep-prepay-config-02" author="brian.ohare@eir.ie" >
+    <!-- Used to create Provider & PLMN default data, these should now be added through the dedicated importers -->
+    <validCheckSum>8:73532ad1f2191b4f36c8ae33a6e52ca8</validCheckSum>
+    <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-config-03" author="brian.ohare@eir.ie" >
+    <!-- Used to create InventoryPool default data, these should now be added through the dedicated importer -->
+    <validCheckSum>8:e5c9bcbd433e9ac358f883639dc1ede6</validCheckSum>
+    <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+  </changeSet>
+
+
+  <changeSet id="tecrep-prepay-config-04" author="brian.ohare@eir.ie" >
+    <!-- Used to create SimCard Generation Configuration default data, these should now be added through the dedicated importer -->
+    <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+    <validCheckSum>8:b2b5876a12a556ecf1c152797f837ee5</validCheckSum>
+  </changeSet>
+
+
+
+</databaseChangeLog>
+

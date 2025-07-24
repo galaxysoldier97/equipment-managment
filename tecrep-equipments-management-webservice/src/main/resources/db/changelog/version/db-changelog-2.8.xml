@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="GOSS-899-1" author="j.lethiec">
+        <!-- Rename prepay_batch to batch -->
+        <renameTable oldTableName="prepay_batch" newTableName="batch"/>
+    </changeSet>
+
+    <changeSet id="GOSS-899-2" author="j.lethiec">
+        <!-- Rename prepay_batch_aud to batch_aud -->
+        <renameTable oldTableName="prepay_batch_aud" newTableName="batch_aud"/>
+    </changeSet>
+
+    <changeSet id="GOSS-898-1" author="j.lethiec">
+        <!-- Add unique constraint on file_configuration.name -->
+        <addUniqueConstraint tableName="file_configuration" columnNames="name"/>
+    </changeSet>
+
+    <changeSet id="GOSS-895-1" author="j.lethiec">
+        <comment>Add artwork column on simcard_generation</comment>
+        <addColumn tableName="simcard_generation">
+            <column name="artwork" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-895-2" author="j.lethiec">
+        <comment>Add sim_reference column on simcard_generation</comment>
+        <addColumn tableName="simcard_generation">
+            <column name="sim_reference" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1100-1" author="b.nzonlia">
+        <comment>Add paired_equipment_id column on simcard</comment>
+        <addColumn tableName="simcard">
+            <column name="paired_equipment_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1100-2" author="b.nzonlia">
+        <comment>Add paired_equipment_id column on simcard aud</comment>
+        <addColumn tableName="simcard_aud">
+            <column name="paired_equipment_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+     <changeSet id="GOSS-1100-3" author="b.nzonlia">
+        <comment>Add foreign key paired_equipment_id column on simcard</comment>
+        <addForeignKeyConstraint  
+            baseColumnNames="paired_equipment_id"  
+            baseTableName="simcard"  
+            constraintName="fk_simcard_paired_equipment_id"  
+            referencedColumnNames="id"    
+            referencedTableName="equipment"/>  
+    </changeSet>
+
+    <changeSet id="GOSS-1100-4" author="b.nzonlia">
+        <!-- migrate paired_equipment to simcard -->
+        <sql>
+            UPDATE simcard s
+            INNER JOIN equipment e ON s.id = e.id
+            SET s.paired_equipment_id = e.paired_equipment_id
+            where e.paired_equipment_id is not null And e.category ='SIMCARD'
+        </sql>
+    </changeSet>
+
+    <changeSet id="GOSS-1100-6" author="b.nzonlia">
+        <!-- Removed unused column paired_equipment_id on equipment -->
+        <dropColumn tableName="equipment" columnName="paired_equipment_id"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1100-7" author="b.nzonlia">
+        <!-- Removed unused column paired_equipment_id on equipment_aud -->
+        <dropColumn tableName="equipment_aud" columnName="paired_equipment_id"/>
+    </changeSet>
+</databaseChangeLog>

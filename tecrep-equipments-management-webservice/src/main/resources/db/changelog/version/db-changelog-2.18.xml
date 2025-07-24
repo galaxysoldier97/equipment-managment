@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="MTOSS-867-1" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="equipment" columnNames="batch_number"/>
+            </not>
+        </preConditions>
+
+        <createIndex tableName="equipment" indexName="batch_number">
+            <column name="batch_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="MTOSS-1398-1" author="j.lethiec">
+        <update tableName="equipment">
+            <column name="nature">MAIN</column>
+            <where>nature is null</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="MTOSS-1398-2" author="j.lethiec">
+        <addNotNullConstraint tableName="equipment" columnName="nature" columnDataType="enum('MAIN', 'ADDITIONAL')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1398-3" author="j.lethiec">
+        <addDefaultValue tableName="equipment" columnName="nature" defaultValue="MAIN"/>
+    </changeSet>
+</databaseChangeLog>

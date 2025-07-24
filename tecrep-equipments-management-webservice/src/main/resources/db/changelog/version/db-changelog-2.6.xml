@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="g.fantappie" id="GOSS-463-1">
+        <!-- create EquipmentModel table -->
+        <createTable tableName="equipment_model">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currentFirmware" type="VARCHAR(40)"/>
+            <column name="access_type"
+                    type="ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="ENUM('CPE', 'ANCILLARY')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_id" type="BIGINT">
+                <constraints foreignKeyName="fk_equipment_model_provider_id" references="provider(id)"
+                             nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-2">
+        <!-- add unique constraints on name, category -->
+        <addUniqueConstraint tableName="equipment_model"
+                             columnNames="name, category"
+                             constraintName="unique_model_name_category"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-3">
+        <!-- create equipment_model from cpe -->
+        <sql>
+            INSERT INTO equipment_model(name, category, access_type, provider_id)
+            select distinct model_name, 'CPE', access_type, provider_id
+            from cpe
+            inner join equipment on cpe.id = equipment.id and access_type is not null
+            where not exists (select name from equipment_model where equipment_model.name = cpe.model_name )
+        </sql>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-4">
+        <!-- create equipment_model from ancillary -->
+        <sql>
+            INSERT INTO equipment_model(name, category, access_type, provider_id)
+            select distinct model_name, 'ANCILLARY', access_type, provider_id
+            from ancillary_equipment
+            inner join equipment on ancillary_equipment.id = equipment.id and access_type is not null
+            where not exists (select name from equipment_model where equipment_model.name =
+            ancillary_equipment.model_name and equipment_model.category = 'ANCILLARY')
+        </sql>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-5">
+        <!-- create equipment_model_id on cpe table -->
+        <addColumn tableName="cpe">
+            <column name="equipment_model_id" type="BIGINT">
+                <constraints foreignKeyName="fk_cpe_equipment_model_id" references="equipment_model(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-6">
+        <!-- create equipment_model_id on ancillary table -->
+        <addColumn tableName="ancillary_equipment">
+            <column name="equipment_model_id" type="BIGINT">
+                <constraints foreignKeyName="fk_ancillary_equipment_model_id" references="equipment_model(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-7">
+        <!-- create link between cpe and equipment_model -->
+        <sql>
+            update cpe
+            inner join equipment_model on cpe.model_name = equipment_model.name and equipment_model.category = 'CPE'
+            set cpe.equipment_model_id = equipment_model.id;
+        </sql>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-8">
+        <!-- create link between ancillary and equipment_model -->
+        <sql>
+            update ancillary_equipment
+            inner join equipment_model on ancillary_equipment.model_name = equipment_model.name and
+            equipment_model.category = 'ANCILLARY'
+            set ancillary_equipment.equipment_model_id = equipment_model.id;
+        </sql>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-9">
+        <!-- drop equipment_model from cpe table -->
+        <dropColumn tableName="cpe"
+                    columnName="model_name"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-463-10">
+        <!-- drop equipment_model from ancillary table -->
+        <dropColumn tableName="ancillary_equipment"
+                    columnName="model_name"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-463-11">
+        <!-- add not-null constraint on cpe.equipment_model_id -->
+        <addNotNullConstraint tableName="cpe" columnName="equipment_model_id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-463-12">
+        <!-- add not-null constraint on ancillary_equipment.equipment_model_id -->
+        <addNotNullConstraint tableName="ancillary_equipment" columnName="equipment_model_id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="GOSS-564">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="auditenversinfo"/>
+            </not>
+        </preConditions>
+        <comment>rename audit_envers_info table</comment>
+        <renameTable newTableName="auditenversinfo" oldTableName="audit_envers_info"/>
+    </changeSet>
+
+    <changeSet id="GOSS-750-1" author="j.lethiec">
+        <!-- Remove auto-increment from SEQUENCE_ICCID.seq_value -->
+        <sql>alter table SEQUENCE_ICCID change seq_value seq_value bigint not null;</sql>
+    </changeSet>
+
+    <changeSet id="GOSS-750-2" author="j.lethiec">
+        <!-- Remove auto-increment from SEQUENCE_MSIN.seq_value -->
+        <sql>alter table SEQUENCE_MSIN change seq_value seq_value bigint not null;</sql>
+    </changeSet>
+
+    <changeSet id="GOSS-750-3" author="j.lethiec" >
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="SEQUENCE_BATCHNUMBER"/>
+            </not>
+        </preConditions>
+        <createTable tableName="SEQUENCE_BATCHNUMBER">
+            <column name="seq_value" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="SEQUENCE_BATCHNUMBER"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

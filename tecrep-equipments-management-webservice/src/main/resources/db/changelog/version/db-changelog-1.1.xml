@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="a.chigurupati@ext.monaco-telecom.mc" id="tecrep-1.1.0-001b">
+        <comment>Update equipment table</comment>
+        <update tableName="equipment">
+            <column name="access_type" type="ENUM('FREEDHOME','DISE','DOCSIS','FTTH','ZATTOO','CONNECTIVITY','CAS','MOBCY')" />
+        </update>
+    </changeSet>
+    <changeSet author="a.chigurupati@ext.monaco-telecom.mc" id="tecrep-1.1.0-008b">
+        <comment>Update ancillary equipment audit table</comment>
+        <update tableName="equipment_aud">
+            <column name="access_type" type="ENUM('FREEDHOME','DISE','DOCSIS','FTTH','ZATTOO','CONNECTIVITY','CAS','MOBCY')" />
+        </update>
+    </changeSet>
+    <changeSet author="a.chigurupati@ext.monaco-telecom.mc" id="tecrep-1.1.0-002">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ancillary_equipment" columnName="paired_equipment_id"/>
+            </not>
+        </preConditions>
+        <comment>Update ancillary equipment table</comment>
+        <addColumn tableName="ancillary_equipment">
+            <column name="paired_equipment_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="a.chigurupati@ext.monaco-telecom.mc" id="tecrep-1.1.0-003">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ancillary_equipment_aud" columnName="paired_equipment_id"/>
+            </not>
+        </preConditions>
+        <comment>Update ancillary equipment audit table</comment>
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="paired_equipment_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="t.suignard@ext.monaco-telecom.mc" id="tecrep-1.1.0-004">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="equipment" columnName="order_id"/>
+            </not>
+        </preConditions>
+        <comment>Update equipment table</comment>
+        <addColumn tableName="equipment">
+            <column name="order_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="t.suignard@ext.monaco-telecom.mc" id="tecrep-1.1.0-005">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="equipment_aud" columnName="order_id"/>
+            </not>
+        </preConditions>
+        <comment>Update equipment audit table</comment>
+        <addColumn tableName="equipment_aud">
+            <column name="order_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-006">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="equipment" columnName="category"/>
+            </not>
+        </preConditions>
+        <comment>Update ancillary equipment table</comment>
+        <addColumn tableName="equipment">
+            <column name="category" type="ENUM('SIMCARD','CPE','ANCILLARY')"/>
+        </addColumn>
+        <comment>Update ancillary equipment audit table</comment>
+        <addColumn tableName="equipment_aud">
+            <column name="category" type="ENUM('SIMCARD','CPE','ANCILLARY')"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-007">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="ancillary_equipment" foreignKeyName="fk_ancillary_equipment_paired_equipment_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="paired_equipment_id"
+                                 baseTableName="ancillary_equipment"
+                                 constraintName="fk_ancillary_equipment_paired_equipment_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="equipment"
+        />
+    </changeSet>
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-008">
+        <preConditions onFail="MARK_RAN">
+                <columnExists tableName="cpe" columnName="stb_serial_number"/>
+        </preConditions>
+        <dropColumn columnName="stb_serial_number" tableName="cpe"/>
+        <dropColumn columnName="wifi_ssid" tableName="cpe"/>
+        <dropColumn columnName="wifi_password" tableName="cpe"/>
+
+        <dropColumn columnName="stb_serial_number" tableName="cpe_aud"/>
+        <dropColumn columnName="wifi_ssid" tableName="cpe_aud"/>
+        <dropColumn columnName="wifi_password" tableName="cpe_aud"/>
+    </changeSet>
+
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-009">
+        <validCheckSum>8:17d4c6cc419193390b983bfb0d3bf539</validCheckSum>
+        <validCheckSum>8:e8a5d1b82d3080f839a3bcb33f4b630f</validCheckSum>
+
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="ancillary_equipment" columnName="equipment_name"/></not>
+        </preConditions>
+        <addColumn tableName="ancillary_equipment">
+            <column name="equipment_name" type="ENUM('BRDBOX','HDD','ONT','STB')"/>
+        </addColumn>
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="equipment_name" type="ENUM('BRDBOX','HDD','ONT','STB')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-1.1.0-010">
+        <update tableName="equipment">
+            <column name="category" value="SIMCARD"/>
+            <where>id IN (select id from simcard)</where>
+        </update>
+        <update tableName="equipment_aud">
+            <column name="category" value="SIMCARD" />
+            <where>id IN (select id from simcard)</where>
+        </update>
+
+        <update tableName="equipment">
+            <column name="category" value="CPE"/>
+            <where>id IN (select id from cpe)</where>
+        </update>
+        <update tableName="equipment_aud">
+            <column name="category" value="CPE" />
+            <where>id IN (select id from cpe)</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-011">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="ancillary_equipment" columnName="independent"/></not>
+        </preConditions>
+        <renameColumn tableName="ancillary_equipment" oldColumnName="independent_mode" newColumnName="independent" columnDataType="BIT"/>
+        <renameColumn tableName="ancillary_equipment_aud" oldColumnName="independent_mode" newColumnName="independent" columnDataType="BIT"/>
+    </changeSet>
+
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-012">
+        <addDefaultValue columnDataType="BIT"
+                         columnName="recyclable"
+                         defaultValueBoolean="true"
+                         tableName="equipment"/>
+        <addDefaultValue columnDataType="BIT"
+                         columnName="recyclable"
+                         defaultValueBoolean="true"
+                         tableName="equipment_aud"/>
+    </changeSet>
+
+    <changeSet author="h.amri@ext.monaco-telecom.mc" id="tecrep-1.1.0-013">
+        <update tableName="equipment">
+            <column name="recyclable" valueBoolean="true"/>
+            <where>recyclable IS NULL</where>
+        </update>
+        <update tableName="equipment_aud">
+            <column name="recyclable" valueBoolean="true" />
+            <where>recyclable IS NULL</where>
+        </update>
+        <addNotNullConstraint columnDataType="BIT"
+                              columnName="recyclable"
+                              tableName="equipment"/>
+        <addNotNullConstraint columnDataType="BIT"
+                              columnName="recyclable"
+                              tableName="equipment_aud"/>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-014">
+        <preConditions  onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="cpe" columnName="mac_address_lan" />
+            </not>
+        </preConditions>
+        <comment>Update simcard cpe table</comment>
+        <addColumn tableName="cpe">
+            <column name="mac_address_lan" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe">
+            <column name="mac_address2_4g" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe">
+            <column name="mac_address_5g" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe">
+            <column name="hw_version" type="VARCHAR(20)"/>
+        </addColumn>
+        <addColumn tableName="cpe">
+            <column name="wpa_key" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-015">
+        <preConditions  onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="cpe_aud" columnName="mac_address_lan" />
+            </not>
+        </preConditions>
+        <comment>Update simcard cpe table</comment>
+        <addColumn tableName="cpe_aud">
+            <column name="mac_address_lan" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe_aud">
+            <column name="mac_address2_4g" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe_aud">
+            <column name="mac_address_5g" type="VARCHAR(17)"/>
+        </addColumn>
+        <addColumn tableName="cpe_aud">
+            <column name="hw_version" type="VARCHAR(20)"/>
+        </addColumn>
+        <addColumn tableName="cpe_aud">
+            <column name="wpa_key" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-016">
+        <modifyDataType tableName="cpe" columnName="hw_version" newDataType="VARCHAR(25)"/>
+        <modifyDataType tableName="cpe" columnName="wpa_key" newDataType="VARCHAR(25)"/>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-017">
+        <modifyDataType tableName="cpe_aud" columnName="hw_version" newDataType="VARCHAR(25)"/>
+        <modifyDataType tableName="cpe_aud" columnName="wpa_key" newDataType="VARCHAR(25)"/>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-018">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="sfp_version" tableName="ancillary_equipment"/>
+                <columnExists columnName="password" tableName="ancillary_equipment"/>
+                <columnExists columnName="sfp_version" tableName="ancillary_equipment_aud"/>
+                <columnExists columnName="password" tableName="ancillary_equipment_aud"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="ancillary_equipment">
+            <column name="sfp_version" type="VARCHAR(25)"/>
+        </addColumn>
+        <addColumn tableName="ancillary_equipment">
+            <column name="password" type="VARCHAR(25)"/>
+        </addColumn>
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="sfp_version" type="VARCHAR(25)"/>
+        </addColumn>
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="password" type="VARCHAR(25)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-019">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address"
+                constraintName="mac_address"
+                tableName="ancillary_equipment"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-020">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address_cpe" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address_cpe"
+                constraintName="mac_address_cpe"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-021">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address_router" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address_router"
+                constraintName="mac_address_router"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-022">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address_voip" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address_voip"
+                constraintName="mac_address_voip"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-023">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address_lan" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address_lan"
+                constraintName="mac_address_lan"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-024">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address2_4g" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address2_4g"
+                constraintName="mac_address2_4g"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-025">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="mac_address_5g" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="mac_address_5g"
+                constraintName="mac_address_5g"
+                tableName="cpe"
+        />
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-026">
+        <validCheckSum>8:2817151805d4048a840555f69782a2f2</validCheckSum>
+        <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+    </changeSet>
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-027">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="imsi_sponsor_number" />
+            </not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="imsi_sponsor_number"
+                constraintName="imsi_sponsor_number"
+                tableName="simcard"
+        />
+        </changeSet>
+
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-028">
+        <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+        <validCheckSum>8:e00a1c3ecb3e8cbfbe7b30f8502b6dd6</validCheckSum>
+    </changeSet>
+
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-029">
+          <dropNotNullConstraint columnDataType="BIT"
+                               columnName="recyclable"
+                               tableName="equipment_aud"/>
+    </changeSet>
+
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-030">
+        <modifyDataType columnName = "access_type"
+                        tableName =  "equipment"
+                        newDataType= "ENUM('FREEDHOME', 'DISE', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "equipment_aud"
+                        newDataType= "ENUM('FREEDHOME', 'DISE', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "provider"
+                        newDataType= "ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "provider_aud"
+                        newDataType= "ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+    </changeSet>
+
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-031">
+        <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+        <validCheckSum>8:9e4c865c7fc48cfb49f88a1ab425c7cf</validCheckSum>
+    </changeSet>
+
+    <changeSet author="b.nzonlia@ext.monaco-telecom.mc" id="tecrep-1.1.0-032">
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="category_serial_number" tableName="equipment" columnNames="category, serial_number"/></not>
+        </preConditions>
+        <addUniqueConstraint
+                columnNames="category, serial_number"
+                constraintName="category_serial_number"
+                tableName="equipment"
+        />
+    </changeSet>
+
+   <changeSet author="t.suignard" id="tecrep-1.1.0-033">
+       <validCheckSum>8:c9d9c8e451f23dba8e2ea733f890618b</validCheckSum>
+       <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-1.1.0-034">
+        <validCheckSum>8:0453e94391da0f7e0d363e0b737ae568</validCheckSum>
+        <validCheckSum>8:d41d8cd98f00b204e9800998ecf8427e</validCheckSum>
+    </changeSet>
+
+</databaseChangeLog>

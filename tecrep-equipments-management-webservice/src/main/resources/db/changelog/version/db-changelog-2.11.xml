@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="GOSS-1255-1" author="g.fantappie">
+        <!-- Added column eSim -->
+        <addColumn tableName="simcard">
+            <column name="is_esim" type="bit(1)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1255-2" author="g.fantappie">
+        <!-- Added column salt -->
+        <addColumn tableName="simcard">
+            <column name="salt" type="VARCHAR(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1255-3" author="g.fantappie">
+        <!-- Added column eSim to simcard_aud -->
+        <addColumn tableName="simcard_aud">
+            <column name="is_esim" type="bit(1)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1255-4" author="g.fantappie">
+        <!-- Added column salt to simcard_aud -->
+        <addColumn tableName="simcard_aud">
+            <column name="salt" type="VARCHAR(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1329-1" author="j.lethiec">
+        <!-- Add column type to table simcard_generation -->
+        <addColumn tableName="simcard_generation">
+            <column name="type" type="VARCHAR(40)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1331-1" author="j.lethiec">
+        <!-- Add column fixedPrefix to table simcard_generation -->
+        <addColumn tableName="simcard_generation">
+            <column name="fixed_prefix" type="varchar(10)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1331-2" author="j.lethiec">
+        <!-- Add column sequencePrefix to table simcard_generation -->
+        <addColumn tableName="simcard_generation">
+            <column name="sequence_prefix" type="varchar(10)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1331-3" author="j.lethiec">
+        <!-- Change batch_number field in allotment_summary to match batch.batch_number -->
+        <modifyDataType tableName="allotment_summary" columnName="batch_number" newDataType="bigint(20)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1331-4" author="j.lethiec">
+        <!-- Add not null constraint on allotment.batch_number -->
+        <addNotNullConstraint tableName="allotment_summary" columnName="batch_number" columnDataType="bigint(20)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1331-5" author="j.lethiec">
+        <!-- Add foreign key from allotment to batch number -->
+        <addForeignKeyConstraint baseTableName="allotment_summary" baseColumnNames="batch_number"
+                                 constraintName="fk_allotment_batch_number"
+                                 referencedTableName="batch"
+                                 referencedColumnNames="batch_number"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1315-1" author="g.fantappie">
+        <!-- Add value TRUNKSIP, and removed CAS, CONNECTIVITY for access-type in equipment -->
+        <modifyDataType tableName="equipment" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1315-2" author="g.fantappie">
+        <!-- Add value TRUNKSIP, and removed CAS, CONNECTIVITY for access-type in equipment_model -->
+        <modifyDataType tableName="equipment_model" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1315-3" author="g.fantappie">
+        <!-- Add value TRUNKSIP, and removed CAS, CONNECTIVITY for access-type in provider -->
+        <modifyDataType tableName="provider" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1255-5" author="g.fantappie">
+        <!--Renaming salt champ into simcard table -->
+        <renameColumn tableName="simcard" oldColumnName="salt" newColumnName="ota_salt" columnDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1255-6" author="g.fantappie">
+        <!--Renaming salt champ into simcard_aud table -->
+        <renameColumn tableName="simcard_aud" oldColumnName="salt" newColumnName="ota_salt" columnDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-566-1">
+        <!-- Increase size of packId from 16 to 32 -->
+        <modifyDataType tableName="simcard" columnName="pack_id" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-566-2">
+        <!-- Increase size of packId from 16 to 32 -->
+        <modifyDataType tableName="simcard_aud" columnName="pack_id" newDataType="varchar(32)"/>
+    </changeSet>
+</databaseChangeLog>

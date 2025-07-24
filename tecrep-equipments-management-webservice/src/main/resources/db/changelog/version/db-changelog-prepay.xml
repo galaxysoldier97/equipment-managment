@@ -1,0 +1,309 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+  <changeSet id="tecrep-prepay-001" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="InventoryPool"/>
+      </not>
+    </preConditions>
+    <comment>Inventory Pool configuration table</comment>
+    <createTable tableName="InventoryPool">
+      <column name="id" autoIncrement="true" type="BIGINT">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="code"
+        type="ENUM('METEOR_PAIRED_CUSTOMER_POOL',
+                'METEOR_UNPAIRED_POOL',
+                'TEST_PAIRED_POOL',
+                'METEORITE_POOL',
+                'EIRCOM_PAIRED_CUSTOMER_POOL',
+                'EIRCOM_UNPAIRED_POOL',
+                'TEST_UNPAIRED_POOL',
+                'ION_PAIRED_POOL',
+                'ION_UNPAIRED_POOL')">
+        <constraints unique="true" nullable="false"/>
+      </column>
+      <column name="description" type="VARCHAR(40)"/>
+      <column name="brand" type="VARCHAR(40)"/>
+      <column name="mvno" type="INT"/>
+      <column name="sim_profile" type="ENUM('DEFAULT','REPLACEMENT')"/>
+      <column name="plmn_id" type="BIGINT">
+        <constraints  foreignKeyName="fk_inventorypool_plmn_id" references="plmn(id)" />
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="InventoryPool"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-001a" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="InventoryPool" columnName="abbreviation"/>
+    </preConditions>
+    <comment>Inventory Pool configuration table rename column abbreviation to brand</comment>
+    <renameColumn tableName="InventoryPool" oldColumnName="abbreviation" newColumnName="brand" columnDataType="VARCHAR(40)"/>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-001b" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="InventoryPool" columnName="plmn_id"/></not>
+    </preConditions>
+    <comment>Inventory Pool configuration table rename column abbreviation to brand</comment>
+    <addColumn tableName="InventoryPool">
+      <column name="plmn_id"  type="BIGINT">
+        <constraints  foreignKeyName="fk_inventorypool_plmn_id" references="plmn(id)" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-002" author="brian.ohare@eir.ie">
+    <preConditions  onFail="MARK_RAN">
+      <not><columnExists tableName="simcard" columnName="inventorypool_id" /></not>
+      <tableExists tableName="InventoryPool" />
+    </preConditions>
+    <addColumn tableName="simcard">
+      <column name="inventorypool_id"  type="BIGINT">
+        <constraints nullable="true" foreignKeyName="fk_simcard_inventorypool_id" references="InventoryPool(id)"/>
+      </column>
+      <column name="pack_id"  type="varchar(16)"><constraints nullable="true"/></column>
+      <column name="transportKey"  type="INT"/>
+      <column name="algorithmVersion"  type="INT"/>
+      <column name="checkDigit"  type="INT"/>
+    </addColumn>
+    <rollback>
+      <dropColumn tableName="simcard">
+        <column name="inventorypool_id"  />
+        <column name="pack_id"  />
+        <column name="transportKey" />
+        <column name="algorithmVersion" />
+        <column name="checkDigit" />
+      </dropColumn>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-003" author="brian.ohare@eir.ie">
+    <preConditions  onFail="MARK_RAN">
+      <not><columnExists tableName="simcard_aud" columnName="inventorypool_id" /></not>
+    </preConditions>
+    <addColumn tableName="simcard_aud">
+      <column name="inventorypool_id"  type="BIGINT"/>
+      <column name="pack_id"  type="varchar(16)" />
+      <column name="transportKey"  type="BIGINT"/>
+      <column name="algorithmVersion"  type="BIGINT"/>
+      <column name="checkDigit"  type="BIGINT"/>
+      <column name="allotment_id"  type="BIGINT"/>
+    </addColumn>
+    <rollback>
+      <dropColumn tableName="simcard_aud">
+        <column name="inventorypool_id"  />
+        <column name="pack_id"  />
+        <column name="transportKey" />
+        <column name="algorithmVersion" />
+        <column name="checkDigit" />
+        <column name="allotment_id" />
+      </dropColumn>
+    </rollback>
+  </changeSet>
+
+
+  <changeSet id="tecrep-prepay-004" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="simcard_generation"/>
+      </not>
+    </preConditions>
+    <comment>SIM card generation configuration table</comment>
+    <createTable tableName="simcard_generation">
+      <column name="id" autoIncrement="true" type="BIGINT">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="name" type="VARCHAR(40)">
+        <constraints unique="true" nullable="false"/>
+      </column>
+      <column name="entity_code" type="INT"/>
+      <column name="simSubType" type="INT"/>
+      <column name="fileNamePrefix" type="ENUM('MMC')"/>
+      <column name="exportfileNameSuffix" type="ENUM('.inp')"/>
+      <column name="importfileNameSuffix" type="ENUM('.out')"/>
+      <column name="iccidSeqPrefix" type="VARCHAR(4)"/>
+      <column name="fixedPrefix" type="VARCHAR(10)"/>
+      <column name="simType" type="ENUM('UNIVERSAL', 'ALLINONE', '4FF_LTE', '2FF', 'MULTISIM')"/>
+      <column name="artwork"
+        type="ENUM('MET_UNIVERS', 'MET_UP015_LTE', 'EIR_SME', 'EIR_SME_REP', 'EIR_POSTPAY_MBB_5G', 'EIR_POSTPAY_5G', 'EIR_REPLACEMENT_5G', 'EIR_BUSINESS', 'EIR_BUSINESS_REP', 'EIR_POSTPAY', 'EIR_PREPAY', 'EIR_REPLACEMENT', 'MET_BB_MULTI_SIM', 'MET_MULTI_SIM', 'ION_POSTPAY', 'ION_REPLACEMENT')"/>
+      <column name="transportKey" type="INT"/>
+      <column name="algorithmVersion" type="INT"/>
+      <column name="simReference"
+        type="ENUM('MET_PP001', 'MET_PP001_LTE', 'ION_PP001_LTE', 'ION_UP001_LTE', 'MET_PP002', 'MET_UP002', 'MET_UP002_LTE','MET_PP005','MET_PP005_LTE','MET_PP005_5G','MET_UP006','MET_UP006_5G','MET_UP006_LTE','MET_PP009','MET_PP009_LTE','MET_PP011','MET_PP011_LTE','MET_PP011_5G','MET_PP013_LTE','MET_PP014_LTE','MET_UP014_LTE','MET_UP015_LTE' )"/>
+      <column name="address1" type="VARCHAR(60)"/>
+      <column name="address2" type="VARCHAR(60)"/>
+      <column name="address3" type="VARCHAR(60)"/>
+      <column name="address4" type="VARCHAR(60)"/>
+      <column name="address5" type="VARCHAR(60)"/>
+      <column name="address6" type="VARCHAR(60)"/>
+      <column name="plmn_id" type="BIGINT">
+        <constraints  foreignKeyName="fk_simcard_generation_plmn_id" references="plmn(id)" />
+      </column>
+      <column name="provider_id" type="BIGINT">
+        <constraints  foreignKeyName="fk_simcard_generation_provider_id" references="provider(id)" />
+      </column>
+      <column name="notify" type="VARCHAR(60)" >
+        <constraints  nullable="false"/>
+      </column>
+      <column name="autoImport" type="BIT" >
+        <constraints  nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="simcard_generation"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-005" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PrepayBatchFile"/>
+      </not>
+    </preConditions>
+    <createTable tableName="PrepayBatchFile">
+      <column name="batch_number" autoIncrement="true" type="BIGINT">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="export_file_name" type="VARCHAR(40)">
+        <constraints unique="true" nullable="false"/>
+      </column>
+      <column name="import_file_name" type="VARCHAR(40)">
+        <constraints unique="true" nullable="true"/>
+      </column>
+      <column name="autoImport" type="BIT" >
+        <constraints  nullable="false"/>
+      </column>
+      <column name="export_creation_date" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP"/>
+      <column name="import_return_date" type="DATETIME"/>
+      <column name="import_return_notify" type="VARCHAR(60)"/>
+      <column name="import_processing_date" type="DATETIME"/>
+    </createTable>
+    <rollback>
+      <dropTable tableName="PrepayBatchFile"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-006" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="SEQUENCE_ICCID"/>
+      </not>
+    </preConditions>
+    <createTable tableName="SEQUENCE_ICCID">
+      <column name="seq_value" autoIncrement="true" type="BIGINT" startWith="1000000">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="batch_id"  type="BIGINT">
+        <constraints  foreignKeyName="fk_sequence_iccid_batch_id" references="PrepayBatchFile(batch_number)" />
+      </column>
+      <column name="seq_index"  type="INT" >
+        <constraints  nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="SEQUENCE_ICCID"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-007" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="SEQUENCE_MSIN"/>
+      </not>
+    </preConditions>
+    <createTable tableName="SEQUENCE_MSIN">
+      <column name="seq_value" autoIncrement="true" type="BIGINT" startWith ="100000000">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="batch_id"  type="BIGINT">
+        <constraints  foreignKeyName="fk_sequence_msin_batch_id" references="PrepayBatchFile(batch_number)" />
+      </column>
+      <column name="seq_index"  type="INT" >
+        <constraints  nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="SEQUENCE_MSIN"/>
+    </rollback>
+  </changeSet>
+
+
+  <changeSet id="tecrep-prepay-008" author="brian.ohare@eir.ie" >
+    <modifyDataType  columnName="sim_profile" newDataType="ENUM('DEFAULT','REPLACEMENT')"
+      tableName="simcard"/>
+    <modifyDataType  columnName="sim_profile" newDataType="ENUM('DEFAULT','REPLACEMENT')"
+      tableName="simcard_aud"/>
+  </changeSet>
+
+  <changeSet id="tecrep-prepay-009" author="brian.ohare@eir.ie" >
+    <preConditions onFail="MARK_RAN">
+      <not><tableExists tableName="allotment_summary"/></not>
+    </preConditions>
+    <createTable tableName="allotment_summary">
+      <column name="allotment_id" autoIncrement="true" type="BIGINT">
+        <constraints primaryKey="true" unique="true" nullable="false"/>
+      </column>
+      <column name="allotment_date" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="batch_number" type="VARCHAR(20)" >
+        <constraints nullable="false" />
+      </column>
+      <column name="allotment_name" type="VARCHAR(40)" />
+      <column name="allotment_type" type="ENUM('PREPAID','POSTPAID','REPLACEMENT_SIM_CARD')" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="inventorypool_id"  type="BIGINT">
+        <constraints nullable="false" foreignKeyName="fk_allotmentsummary_inventorypool_id" references="InventoryPool(id)"/>
+      </column>
+      <column name="quantity" type="INT" >
+        <constraints  nullable="false"/>
+      </column>
+      <column name="packaged_with_handset" type="BIT" />
+      <column name="price_plan" type="VARCHAR(20)" />
+      <column name="initial_credit" type="INT" />
+      <column name="pre_provisioning" type="BIT" />
+      <column name="provisioned_date" type="DATETIME"  />
+      <column name="sent_to_logistics_date" type="DATETIME"  />
+    </createTable>
+    <rollback>
+      <dropTable tableName="allotment_summary"/>
+    </rollback>
+  </changeSet>
+
+
+  <changeSet id="tecrep-prepay-010" author="brian.ohare@eir.ie" >
+    <preConditions  onFail="MARK_RAN">
+      <not><columnExists tableName="simcard" columnName="allotment_id" /></not>
+      <tableExists tableName="allotment_summary" />
+    </preConditions>
+    <addColumn tableName="simcard">
+      <column name="allotment_id"  type="BIGINT">
+        <constraints nullable="true" foreignKeyName="fk_simcard_allotment_id" references="allotment_summary(allotment_id)"/>
+      </column>
+    </addColumn>
+  </changeSet>
+
+
+  <changeSet id="tecrep-prepay-011" author="brian.ohare@eir.ie" >
+    <comment>Update provider table</comment>
+    <modifyDataType columnName = "access_type" tableName =  "provider"
+      newDataType= "ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB', 'METEOR')"/>
+  </changeSet>
+
+  <changeSet  id="tecrep-prepay-012" author="g.rasolondraibe@monaco-telecom.mc">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="allotment_summary" columnName="pre_provisioned_date"/></not>
+    </preConditions>
+    <renameColumn tableName="allotment_summary" oldColumnName="provisioned_date" newColumnName="pre_provisioned_date" columnDataType="DATETIME"/>
+  </changeSet>
+
+</databaseChangeLog>
+

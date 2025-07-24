@@ -1,0 +1,2957 @@
+{
+  "info": {
+    "_postman_id": "4964a078-9e80-47b3-8198-a26e25e0bb26",
+    "name": "tecrep-equipments-management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "simcard - get all",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ancillary equipment - get all",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - get by equipment id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - get by equipment id",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "{{equipment-id}}"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:15:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"INSTORE\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - get by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryequipmentId}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryequipmentId}}"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - get by equipment id",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "{{equipment-id}}"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:15:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"INSTORE\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "simcard - book",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/book",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}",
+            "book"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - book",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"pairedEquipmentId\":null\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryEquipmentId}}/book",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryEquipmentId}}",
+            "book"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "simcard - activate",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/activate",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}",
+            "activate"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - activate",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"pairedEquipmentId\":4\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryEquipmentId}}/activate",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryEquipmentId}}",
+            "activate"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - de-activate",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"pairedEquipmentId\":4\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryEquipmentId}}/deactivate",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryEquipmentId}}",
+            "deactivate"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - assign",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"pairedEquipmentId\":4\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryEquipmentId}}/assign",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryEquipmentId}}",
+            "assign"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "simcard - rollback activate",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/rollback_activate",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}",
+            "rollback_activate"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - rollback activate",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/rollback_activate",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "{{equipment-id}}",
+                "rollback_activate"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 19:09:45 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"equipmentId\": 1,\n    \"serialNumber\": \"1012345678901384\",\n    \"externalNumber\": null,\n    \"accessType\": \"FREEDHOME\",\n    \"status\": \"BOOKED\",\n    \"nature\": \"MAIN\",\n    \"recyclable\": false,\n    \"preactivated\": false,\n    \"batchNumber\": null,\n    \"serviceId\": 1,\n    \"pairedEquipment\": null,\n    \"provider\": {\n        \"providerId\": 1,\n        \"name\": \"Provider 001\",\n        \"accessType\": \"FREEDHOME\"\n    },\n    \"warehouse\": {\n        \"warehouseId\": 1,\n        \"name\": \"Warehouse 005\",\n        \"resellerCode\": \"WHOO5\"\n    },\n    \"imsiNumber\": \"100000000084\",\n    \"imsiSponsorNumber\": \"100000000084\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": null,\n    \"accessControlClass\": null,\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        },
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"macAddress\": \"0A:01:02:03:04:22\",\r\n    \"modelName\": \"modelName2222\",\r\n    \"pairedEquipmentId\": null\r\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/2",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "2"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - rollback activate",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/rollback_activate",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "{{equipment-id}}",
+                "rollback_activate"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 19:09:45 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"equipmentId\": 1,\n    \"serialNumber\": \"1012345678901384\",\n    \"externalNumber\": null,\n    \"accessType\": \"FREEDHOME\",\n    \"status\": \"BOOKED\",\n    \"nature\": \"MAIN\",\n    \"recyclable\": false,\n    \"preactivated\": false,\n    \"batchNumber\": null,\n    \"serviceId\": 1,\n    \"pairedEquipment\": null,\n    \"provider\": {\n        \"providerId\": 1,\n        \"name\": \"Provider 001\",\n        \"accessType\": \"FREEDHOME\"\n    },\n    \"warehouse\": {\n        \"warehouseId\": 1,\n        \"name\": \"Warehouse 005\",\n        \"resellerCode\": \"WHOO5\"\n    },\n    \"imsiNumber\": \"100000000084\",\n    \"imsiSponsorNumber\": \"100000000084\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": null,\n    \"accessControlClass\": null,\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        },
+        {
+          "name": "simcard - book - ok",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/book/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "book",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"BOOKED\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "simcard - available",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}/available",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}",
+            "available"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - available",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/available/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "available",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"AVAILABLE\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "ancillary equipment - available",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"pairedEquipmentId\":null\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/{{ancillaryEquipmentId}}/available",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "{{ancillaryEquipmentId}}",
+            "available"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "simcard - available",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"equipmentId\":{{equipment-id}}\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/simcards/available/state",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "simcards",
+                "available",
+                "state"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 26 Apr 2019 17:16:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"simcardId\": 1,\n    \"imsiNumber\": \"100000000037\",\n    \"imsiSponsorNumber\": \"100000000037\",\n    \"puk1Code\": \"10000001\",\n    \"pin1Code\": \"1001\",\n    \"puk2Code\": \"10000001\",\n    \"pin2Code\": \"1001\",\n    \"authKey\": \"authkey37\",\n    \"accessControlClass\": \"a037\",\n    \"simProfile\": \"DEFAULT\",\n    \"number\": 33603685267,\n    \"equipment\": {\n        \"equipmentId\": 3,\n        \"serialNumber\": \"1012345678901337\",\n        \"externalNumber\": null,\n        \"accessType\": \"FREEDHOME\",\n        \"status\": \"AVAILABLE\",\n        \"nature\": \"MAIN\",\n        \"recyclable\": false,\n        \"preactivated\": false,\n        \"batchNumber\": null,\n        \"serviceId\": 123456,\n        \"pairedEquipment\": null,\n        \"provider\": {\n            \"providerId\": 1,\n            \"name\": \"Provider FREEDHOME 002\",\n            \"accessType\": \"FREEDHOME\"\n        },\n        \"warehouse\": {\n            \"warehouseId\": 1,\n            \"name\": \"Warehouse 001\",\n            \"resellerCode\": \"WHOO1\"\n        }\n    },\n    \"plmn\": {\n        \"plmnId\": 1,\n        \"code\": \"P0001\",\n        \"networkName\": \"Network 001\",\n        \"tadigCode\": \"1001\",\n        \"countryIsoCode\": \"CY\",\n        \"countryName\": \"Cyprus\",\n        \"rangesPrefix\": \"00357\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "simcard - add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"accessControlClass\": \"a0\",\r\n  \"adminCode\": \"10000\",\r\n  \"authKey\": \"authkey\",\r\n  \"imsiNumber\": \"1000000000\",\r\n  \"imsiSponsorNumber\": \"1000000000\",\r\n  \"number\": 33603685267,\r\n  \"otaCipheringKey\": \"string\",\r\n  \"otaSignatureKey\": \"string\",\r\n  \"pin1Code\": \"1001\",\r\n  \"pin2Code\": \"1001\",\r\n  \"plmn\": {\r\n    \"plmnId\": 1\r\n  },\r\n  \"puk1Code\": \"10000001\",\r\n  \"puk2Code\": \"10000001\",\r\n  \"putDescriptionKey\": \"string\",\r\n  \"simProfile\": \"DEFAULT\",\r\n\t\"serialNumber\":\"10123456789013\",\r\n\t\"externalNumber\":null,\r\n\t\"accessType\":\"FREEDHOME\",\r\n\t\"nature\":\"MAIN\",\r\n\t\"recyclable\":\"false\",\r\n\t\"batchNumber\":null,\r\n\t\"customerId\":\"123456\",\r\n\t\"serviceId\":null,\r\n\t\"pairedEquipmentId\":null,\r\n\t\"preactivated\":0,\r\n\t\"provider\":{\r\n\t\t\"providerId\": 1\r\n\t},\r\n\t\"warehouse\":{\r\n\t\t\"warehouseId\":1\r\n\t}\r\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards"
+          ]
+        },
+        "description": "Need to add Provider, Warehouse, Plmn before Simcard"
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"imsiNumber\": \"1000000000{{compteur}}\",\r\n  \"imsiSponsorNumber\": \"1000000000{{compteur}}\",\r\n  \"pin1Code\": \"1001\",\r\n  \"pin2Code\": \"1001\",\r\n  \"puk1Code\": \"10000001\",\r\n  \"puk2Code\": \"10000001\",\r\n  \"authKey\":null,\r\n  \"accessControlClass\":null,\r\n  \"simProfile\":\"DEFAULT\",\r\n  \"serviceId\":1\r\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/{{equipment-id}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "{{equipment-id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - update pack by ID",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \"packId\":\"pack001\"\r\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/1979/pack",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "1979",
+            "pack"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - update pack by IMSI",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"imsiNumber\": \"272030100000286\",\r\n   \"packId\":\"pack002\"\r\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/pack",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "pack"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - search by status=INSTORE",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/search?status=INSTORE",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "INSTORE"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - search by ICCID (equipment serialnumber)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/search?sn=1012345678901334",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "sn",
+              "value": "1012345678901334"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - search by status=AVAILABLE",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/search?status=AVAILABLE",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "AVAILABLE"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - search by status=BOOKED",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/search?status=BOOKED",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "BOOKED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "simcard - search by imsi",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/simcards/search?imsi=1000000000003",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "imsi",
+              "value": "1000000000003"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ancillary equipment - search by mac address partial",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/search?macAddress=0A:01:02%",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "macAddress",
+              "value": "0A:01:02%"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ancillary equipment - search by multiple fields",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments/search?macAddress=0A:01:02:03:05%&status=INSTORE&nature=main&provider=Provider FREEDHOME 002&warehouse=Warehouse 003",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "macAddress",
+              "value": "0A:01:02:03:05%"
+            },
+            {
+              "key": "status",
+              "value": "INSTORE"
+            },
+            {
+              "key": "nature",
+              "value": "main"
+            },
+            {
+              "key": "provider",
+              "value": "Provider FREEDHOME 002"
+            },
+            {
+              "key": "warehouse",
+              "value": "Warehouse 003"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cpes- getall",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/cpes",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "cpes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cpes- add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"macAddressCpe\":\"0A:01:02:03:04:05\",\n\t\"macAddressRouter\":\"0A:01:02:03:04:05\",\n\t\"macAddressVoip\":\"0A:01:02:03:04:05\",\n\t\"stbSerialNumber\":\"1234567890{{compteur}}\",\n\t\"status\":\"INSTORE\",\n\t\"chipsetId\":\"chipsetId\",\n\t\"wifiSsid\":\"wifiSsid\",\n\t\"wifiPassword\":\"wifiPassword\",\n\t\"modelName\":\"modelName\",\n\t\"serialNumber\":\"10123456789013{{compteur}}\",\n\t\"externalNumber\":null,\n\t\"usage\":\"DISE\",\n\t\"nature\":\"MAIN\",\n\t\"recyclable\":\"false\",\n\t\"batchNumber\":null,\n\t\"customerId\":\"123456\",\n\t\"serviceId\":\"123456\",\n\t\"pairedEquipmentId\":null,\n\t\"preactivated\":0,\n\t\"provider\":{\n\t\t\"providerId\": 1\n\t},\n\t\"warehouse\":{\n\t\t\"warehouseId\":1\n\t}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/cpes",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "cpes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ancillary equipment - add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"macAddress\":\"0A:01:02:03:04:06\",\n\t\"modelName\":\"modelName\",\n\t\"serialNumber\":\"101234567890131\",\n\t\"externalNumber\":null,\n\t\"usage\":\"DISE\",\n\t\"nature\":\"MAIN\",\n\t\"recyclable\":\"false\",\n\t\"batchNumber\":null,\n\t\"customerId\":\"123456\",\n\t\"serviceId\":\"123456\",\n\t\"pairedEquipmentId\":null,\n\t\"preactivated\":0,\n\t\"provider\":{\n\t\t\"providerId\": 1\n\t},\n\t\"warehouse\":{\n\t\t\"warehouseId\":1\n\t}\n\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/ancillaryequipments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "ancillaryequipments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ancillary equipment - getall",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"macAddress\":\"0A:01:02:03:04:05\",\n\t\"modelName\":\"modelName\",\n\t\"equipment\":{\n    \t\"serialNumber\":\"101234567890131{{compteur}}\",\n    \t\"externalNumber\":null,\n    \t\"usage\":\"DISE\",\n    \t\"nature\":\"MAIN\",\n    \t\"recyclable\":\"false\",\n    \t\"batchNumber\":null,\n    \t\"customerId\":\"123456\",\n    \t\"serviceId\":\"123456\",\n    \t\"pairedEquipmentId\":null,\n    \t\"preactivated\":0,\n    \t\"provider\":{\n    \t\t\"providerId\": 1\n    \t},\n    \t\"warehouse\":{\n    \t\t\"warehouseId\":1\n    \t}\n    }\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/ancillaryequipments",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "ancillaryequipments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Provider FREEDHOME 002\",\n    \"accessType\": \"FREEDHOME\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\":1,\n    \"name\": \"Supplier 001 update\",\n    \"activity\": \"MOBILE\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers/1",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers/3",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - getall",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - getall Copy",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - get by id",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers/1",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "provider - find by name startwith",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers/search?name=prov",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "prov"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "provider - find by name startwith",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/providers/search/?name=prov",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "providers",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "prov"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 17:09:39 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"_embedded\": {\n        \"providers\": [\n            {\n                \"providerId\": 2,\n                \"name\": \"Provider 001\",\n                \"accessType\": \"FREEDHOME\"\n            },\n            {\n                \"providerId\": 1,\n                \"name\": \"Provider FREEDHOME 002\",\n                \"accessType\": \"FREEDHOME\"\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/providers\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 2,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "provider - find by activity",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/providers/search/activities?act=MOBILE",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "providers",
+            "search",
+            "activities"
+          ],
+          "query": [
+            {
+              "key": "act",
+              "value": "MOBILE"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "plmn - add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"code\": \"P0001\",\n    \"networkName\": \"Network 001\",\n    \"tadigCode\": \"1001\",\n    \"countryIsoCode\": \"CY\",\n    \"countryName\": \"Cyprus\",\n    \"rangesPrefix\": \"00357\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "plmn - delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/vnd.monacotelecom+json;version=1.1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns/3",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "plmn - update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/vnd.monacotelecom+json;version=1.1",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\":1,\n    \"code\": \"P0001\",\n    \"networkName\": \"Network name 001\",\n    \"tadigCode\": \"1001\",\n    \"countryIsoCode\": \"CY\",\n    \"countryName\": \"Cyprus\",\n    \"rangesPrefix\": \"00357\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns/1",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "plmn - getall",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/vnd.monacotelecom+json;version=1.1",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "plmn - getall - result OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/vnd.monacotelecom+json;version=1.1",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/plmns",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "plmns"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 17:07:38 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"_embedded\": {\n        \"plmns\": [\n            {\n                \"plmnId\": 1,\n                \"code\": \"P0001\",\n                \"networkName\": \"Network 001\",\n                \"tadigCode\": \"1001\",\n                \"countryIsoCode\": \"CY\",\n                \"countryName\": \"Cyprus\",\n                \"rangesPrefix\": \"00357\"\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/plmns\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "plmn - get by code",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/vnd.monacotelecom+json;version=1.1",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns/search?code=P0001",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "code",
+              "value": "P0001"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "plmn - get by code - result OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/vnd.monacotelecom+json;version=1.1",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/plmns/search?code=P0001",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "plmns",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "P0001"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 17:07:17 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"_embedded\": {\n        \"plmns\": [\n            {\n                \"plmnId\": 1,\n                \"code\": \"P0001\",\n                \"networkName\": \"Network 001\",\n                \"tadigCode\": \"1001\",\n                \"countryIsoCode\": \"CY\",\n                \"countryName\": \"Cyprus\",\n                \"rangesPrefix\": \"00357\"\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/plmns\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 1,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "plmn - get by prefixes",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/vnd.monacotelecom+json;version=1.1",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/plmns/search?prefix=0033",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "plmns",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "prefix",
+              "value": "0033"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Warehouse 003\",\n    \"resellerCode\": \"WHOO3\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "warehouse - add - result KO",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Warehouse 002\",\n    \"resellerCode\": \"WHOO2\"\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/warehouses",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.15.8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 16:31:09 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"timestamp\": \"2019-05-25 06:31:09\",\n    \"status\": 400,\n    \"error\": \"Warehouse with the resellerCode WHOO2 already exist\",\n    \"extraData\": null\n}"
+        },
+        {
+          "name": "warehouse - add - result OK",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Warehouse 002\",\n    \"resellerCode\": \"WHOO2\"\n}"
+            },
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/warehouses",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.15.8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 16:30:53 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"warehouseId\": 2,\n    \"name\": \"Warehouse 002\",\n    \"resellerCode\": \"WHOO2\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "warehouse - update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\":{{warehouseId}},\n    \"name\": \"Warehouse 003 Update\",\n    \"resellerCode\": \"WHOO3\"\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/{{warehouseId}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "{{warehouseId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/{{warehouseId}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "{{warehouseId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - getall",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - get by id",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/{{warehouseId}}",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "{{warehouseId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - find by name",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/search?name=ware",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "ware"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "warehouse - find by empty filter",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/search",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "search"
+          ]
+        },
+        "description": "Must give the same result as getAll"
+      },
+      "response": [
+        {
+          "name": "warehouse - find by empty filter - result OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{tecrep-eqm-url}}/warehouses/search",
+              "host": [
+                "{{tecrep-eqm-url}}"
+              ],
+              "path": [
+                "warehouses",
+                "search"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/hal+json;charset=UTF-8"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 25 May 2019 17:02:34 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"_embedded\": {\n        \"warehouses\": [\n            {\n                \"warehouseId\": 1,\n                \"name\": \"Warehouse 001\",\n                \"resellerCode\": \"WHOO1\"\n            },\n            {\n                \"warehouseId\": 4,\n                \"name\": \"Warehouse 004\",\n                \"resellerCode\": \"WHOO4\"\n            },\n            {\n                \"warehouseId\": 5,\n                \"name\": \"Warehouse 005\",\n                \"resellerCode\": \"WHOO5\"\n            }\n        ]\n    },\n    \"_links\": {\n        \"self\": {\n            \"href\": \"http://localhost:8080/warehouses\"\n        }\n    },\n    \"page\": {\n        \"size\": 20,\n        \"totalElements\": 3,\n        \"totalPages\": 1,\n        \"number\": 0\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "warehouse - find by resellerCode",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{tecrep-eqm-url}}/warehouses/search?reseller_code=wh002",
+          "host": [
+            "{{tecrep-eqm-url}}"
+          ],
+          "path": [
+            "warehouses",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "reseller_code",
+              "value": "wh002"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "import simcard",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "type": "text"
+          },
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "value": null,
+              "type": "file"
+            },
+            {
+              "key": "accessType",
+              "value": "FREEDHOME",
+              "type": "text"
+            },
+            {
+              "key": "batchNumber",
+              "value": "123456789",
+              "type": "text"
+            },
+            {
+              "key": "plmnId",
+              "value": "21210",
+              "type": "text"
+            },
+            {
+              "key": "preactivated",
+              "value": "false",
+              "type": "text"
+            },
+            {
+              "key": "providerId",
+              "value": "Gemalto",
+              "type": "text"
+            },
+            {
+              "key": "simProfile",
+              "value": "DEFAULT",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{tecrep-svm-url}}/import/SimCard/start",
+          "host": [
+            "{{tecrep-svm-url}}"
+          ],
+          "path": [
+            "import",
+            "SimCard",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "import Plmn",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "type": "text"
+          },
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "value": null,
+              "type": "file"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{tecrep-svm-url}}/import/Plmn/start",
+          "host": [
+            "{{tecrep-svm-url}}"
+          ],
+          "path": [
+            "import",
+            "Plmn",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Import Provider",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/x-www-form-urlencoded"
+          },
+          {
+            "key": "",
+            "type": "text",
+            "value": "",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "value": null,
+              "type": "file"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{tecrep-svm-url}}/import/Provider/start",
+          "host": [
+            "{{tecrep-svm-url}}"
+          ],
+          "path": [
+            "import",
+            "Provider",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Export to Provider",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"quantity\" : 6,\n\t\"configuration\": {\n\t\t\"name\": \"EIRCOM_FCS_MOB_LANDLINE_UNPAIR\"\n\t},\n\t\"inventoryPool\": {\n\t\t\"inventoryPoolId\": 2,\n\t\t\"name\": \"METEOR_UNPAIRED_POOL\",\n\t\t\"description\": \"Meteor Unpaired Pool\",\n\t\t\"abbreviation\": \"Meteor Unpaired Pool\",\n\t\t\"mvno\": 0\n\t}\n}"
+        },
+        "url": {
+          "raw": "{{tecrep-svm-url}}/simcards/export",
+          "host": [
+            "{{tecrep-svm-url}}"
+          ],
+          "path": [
+            "simcards",
+            "export"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all inventory pools",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/inventorypools",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "inventorypools"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get inventory pool by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/inventorypools/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "inventorypools",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST export sim",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"quantity\" : 2,\n\t\"configuration\": {\n\t\t\"name\": \"EIRCOM_FCS_MOB_LANDLINE_UNPAIR\"\n\t},\n\t\"inventoryPool\": {\n\t\t\"inventoryPoolId\": 2,\n\t\t\"name\": \"METEOR_UNPAIRED_POOL\",\n\t\t\"description\": \"Meteor Unpaired Pool\",\n\t\t\"abbreviation\": \"Meteor Unpaired Pool\",\n\t\t\"mvno\": 0\n\t}\n}"
+        },
+        "url": {
+          "raw": "http://localhost:10025/private/auth/simcards/export",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "simcards",
+            "export"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all SIM Generation configurations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/simGenerationConfigurations",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "simGenerationConfigurations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all alloments",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get alloment by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all alloments by batch number",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments/batch/00001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments",
+            "batch",
+            "00001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST add alloment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"allotmentName\" : \"My test\",\r\n\t\"allotmentType\" : \"PREPAID\",\r\n\t\"batchNumber\" : \"00003\",\r\n\t\"quantity\" :1,\r\n\t\"packagedWithHandset\" : false,\r\n\t\"pricePlan\" : 3000,\r\n\t\"initialCredit\" : 0,\r\n    \"inventoryPool\": {\r\n        \"inventoryPoolId\": 3,\r\n        \"code\": \"TEST_PAIRED_POOL\"\r\n    }\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments/add",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST add alloment without optional Inventory Pool",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"allotmentName\" : \"My test\",\r\n\t\"allotmentType\" : \"PREPAID\",\r\n\t\"batchNumber\" : \"00001\",\r\n\t\"quantity\" :1,\r\n\t\"packagedWithHandset\" : false,\r\n\t\"pricePlan\" : 3000,\r\n\t\"initialCredit\" : 0\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments/add",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST export alloment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"allotmentId\" : 1\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:10025/private/auth/allotments/export",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "10025",
+          "path": [
+            "private",
+            "auth",
+            "allotments",
+            "export"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessToken",
+        "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ0WldCT2hleEV2bDhObTN1OWZLS1J1d25PYjktWm4ycDd6bjE3TUF1c1VjIn0.eyJleHAiOjE2MDIyNzQyNjgsImlhdCI6MTYwMjIzODI2OSwiYXV0aF90aW1lIjoxNjAyMjM4MjY4LCJqdGkiOiIxNzg5YWIxMi1iZjBkLTQxNjctOTNhZC1kY2RhNGRlZWY3MWIiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvYXV0aC9yZWFsbXMvbW9uYWNvLXRlbGVjb20tbG9jYWwiLCJhdWQiOlsidGVjcmVwLWVxdWlwbWVudHMtbWFuYWdlbWVudCIsInRlY3JlcC1yZXNvdXJjZXMtbWFuYWdlbWVudCIsImludmVudG9yeS1pbnRlZ3JhdGlvbiJdLCJzdWIiOiIwMjVmOTI0Yy1iYTZiLTRhODEtOWQwMS1mNWMwMDYyNDYzY2IiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ0ZWNyZXAtbW9uaXRvciIsInNlc3Npb25fc3RhdGUiOiIzNDg2NzA2My03ZThhLTRhMjMtOTQzMC05NzE5N2MzYTY0ZGYiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiUk9MRV9DVVNUT01FUiIsInNldHRpbmdzIiwiYWRkcmVzc2VzIiwiUk9MRV9ERUxFVEUiLCJST0xFX0ZJTkFOQ0UiLCJyZXNvdXJjZXMiLCJhbmNpbGxhcnllcXVpcG1lbnRzIiwic2VydmljZXMiLCJST0xFX0NTUiIsIlJPTEVfV1JJVEUiLCJlcXVpcG1lbnRzIiwiYWRtaW4tcm9sZSIsIm9mZmxpbmVfYWNjZXNzIiwiUk9MRV9BRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIiwiUk9MRV9DU1JfQURNSU4iLCJST0xFX1JFQUQiLCJkYXNoYm9hcmQiXX0sInJlc291cmNlX2FjY2VzcyI6eyJ0ZWNyZXAtbW9uaXRvciI6eyJyb2xlcyI6WyJleHBsb2l0YXRpb24iLCJST0xFX0RFTEVURSIsImFkbWluaXN0cmF0aW9uIiwidW1hX3Byb3RlY3Rpb24iLCJzdXBwb3J0IiwiUk9MRV9SRUFEIiwiUk9MRV9XUklURSJdfSwidGVjcmVwLWVxdWlwbWVudHMtbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJhZG1pbmlzdHJhdGlvbiJdfSwidGVjcmVwLXJlc291cmNlcy1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbImV4cGxvaXRhdGlvbiIsImFkbWluaXN0cmF0aW9uIiwic3VwcG9ydCJdfSwiaW52ZW50b3J5LWludGVncmF0aW9uIjp7InJvbGVzIjpbImFkbWluaXN0cmF0aW9uIiwidW1hX3Byb3RlY3Rpb24iXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJCcmlhbiBPSGFyZSIsInByZWZlcnJlZF91c2VybmFtZSI6ImJyaWFuIiwiZ2l2ZW5fbmFtZSI6IkJyaWFuIiwiZmFtaWx5X25hbWUiOiJPSGFyZSIsImVtYWlsIjoiYnJpYW4ub2hhcmVAZWlyLmllIn0.CvjuONCqIOmtTcQrKXojx6UTPWsP8UGGDOoEIS9ABl_iZtKpNyglyIq1oBZvi-UgJpBwVr7vgj3XItnpYHQYmE3wmRbGVo6OMMDjoT2MROah1MV9ZQTnA0pSS9VHWtuZhaFpOlpqNeHP5TSDFl6jLfwalGvccA5psUnC8Us6JywgdvInl1CxmMyYp1bqE7_BbDmPNEM0ODOe5yhCsRiTUZU-atHT0YPNVCOek207hJ4GPPqnUTuYw5dVBtwhor10ca72kkJM69eJV6I60tR0NDRzjjQJQMtvG--NeVgRkLk9ckAM5h8lEJPQyx5oe9wKX_b0knh3-s3alwQRyWnTmg",
+        "type": "string"
+      },
+      {
+        "key": "tokenType",
+        "value": "bearer",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "b5eb979a-24dd-4bc9-9a35-6c52d55a63f7",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "648b9bf6-13fd-4a54-a3d2-a4f3bcccd7bd",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "cfbf66d5-a5e7-4eb0-ba68-05b55d825b09",
+      "key": "tecrep-eqm-url",
+      "value": "localhost:10025/private/auth"
+    }
+  ]
+}

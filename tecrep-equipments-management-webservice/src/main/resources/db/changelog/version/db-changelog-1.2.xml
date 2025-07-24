@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.2.0-001">
+        <comment>change column model_name to 60 length</comment>
+        <modifyDataType tableName="ancillary_equipment" columnName="model_name" newDataType="VARCHAR(60)"/>
+        <rollback>
+            <modifyDataType tableName="ancillary_equipment" columnName="model_name" newDataType="VARCHAR(20)"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.2.0-002">
+        <comment>change column model_name to 60 length</comment>
+        <modifyDataType tableName="ancillary_equipment_aud" columnName="model_name" newDataType="VARCHAR(60)"/>
+        <rollback>
+            <modifyDataType tableName="ancillary_equipment_aud" columnName="model_name" newDataType="VARCHAR(20)"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

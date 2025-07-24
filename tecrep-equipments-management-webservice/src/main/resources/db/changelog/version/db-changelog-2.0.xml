@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="j.lethiec" id="GI-425-1">
+        <createTable tableName="file_configuration">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prefix" type="varchar(50)"/>
+            <column name="suffix" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-2">
+        <insert tableName="file_configuration">
+            <column name="id" value="1"/>
+            <column name="name" value="default_import"/>
+            <column name="prefix" value="MMC"/>
+            <column name="suffix" value=".out"/>
+        </insert>
+
+        <insert tableName="file_configuration">
+            <column name="id" value="2"/>
+            <column name="name" value="default_export"/>
+            <column name="prefix" value="MMC"/>
+            <column name="suffix" value=".inp"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-3">
+        <addColumn tableName="simcard_generation">
+            <column name="import_file_config" type="bigint" defaultValue="1">
+                <constraints nullable="false" references="file_configuration(id)"
+                             foreignKeyName="fk_simcard_generation_import_file_config"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="simcard_generation">
+            <column name="export_file_config" type="bigint" defaultValue="2">
+                <constraints nullable="false" references="file_configuration(id)"
+                             foreignKeyName="fk_simcard_generation_export_file_config"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-4">
+        <dropColumn tableName="simcard_generation">
+            <column name="fileNamePrefix"/>
+            <column name="exportFileNameSuffix"/>
+            <column name="importFileNameSuffix"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-5">
+        <addColumn tableName="file_configuration">
+            <column name="article" type="varchar(50)"/>
+            <column name="code" type="varchar(50)"/>
+            <column name="type" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-6">
+        <dropUniqueConstraint tableName="inventory_pool" constraintName="code"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-7">
+        <modifyDataType tableName="inventory_pool" columnName="code" newDataType="varchar(40)"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-8">
+        <addUniqueConstraint tableName="inventory_pool" columnNames="code"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-9">
+        <dropColumn tableName="inventory_pool" columnName="brand"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-425-10">
+        <addColumn tableName="inventory_pool">
+            <column name="description" type="varchar(40)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-430-1">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="prepay_batch_aud" columnName="revision_id"/></not>
+        </preConditions>
+        <addColumn tableName="prepay_batch_aud">
+            <column name="revision_id" type="int(11)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GI-430-2">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="prepay_batch_aud" columnName="revision_type"/></not>
+        </preConditions>
+        <addColumn tableName="prepay_batch_aud">
+            <column name="revision_type" type="tinyint(4)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-430-3" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="file_configuration" columnName="header_format"/></not>
+            <not><columnExists tableName="file_configuration" columnName="record_format"/></not>
+        </preConditions>
+        <addColumn tableName="file_configuration">
+            <column name="header_format" type="longtext"/>
+            <column name="record_format" type="longtext"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-430-4" author="j.lethiec">
+        <dropNotNullConstraint tableName="equipment" columnName="access_type" columnDataType="enum('FREEDHOME', 'DISE', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB')"/>
+        <dropNotNullConstraint tableName="provider" columnName="access_type" columnDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'METEOR')"/>
+    </changeSet>
+
+    <changeSet id="GI-430-5" author="j.lethiec">
+        <update tableName="equipment">
+            <column name="access_type"/>
+            <where>access_type in ('METEOR', 'MOBCY', 'FIXECY')</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-430-6" author="j.lethiec">
+        <update tableName="provider">
+            <column name="access_type"/>
+            <where>access_type in ('METEOR', 'MOBCY', 'FIXECY')</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-430-7" author="j.lethiec">
+        <modifyDataType tableName="provider" columnName="access_type" newDataType="ENUM('DOCSIS','FTTH','DISE','FREEDHOME','ZATTOO','CONNECTIVITY','CAS','BBHB','PREPAY')"/>
+    </changeSet>
+
+    <changeSet id="GI-430-8" author="j.lethiec">
+        <modifyDataType tableName="provider_aud" columnName="access_type" newDataType="ENUM('DOCSIS','FTTH','DISE','FREEDHOME','ZATTOO','CONNECTIVITY','CAS','BBHB','PREPAY')"/>
+    </changeSet>
+
+    <changeSet id="GI-430-9" author="j.lethiec">
+        <modifyDataType tableName="equipment" columnName="access_type" newDataType="ENUM('DOCSIS','FTTH','DISE','FREEDHOME','ZATTOO','CONNECTIVITY','CAS','BBHB','PREPAY')"/>
+    </changeSet>
+
+    <changeSet id="GI-430-10" author="j.lethiec">
+        <modifyDataType tableName="equipment_aud" columnName="access_type" newDataType="ENUM('DOCSIS','FTTH','DISE','FREEDHOME','ZATTOO','CONNECTIVITY','CAS','BBHB','PREPAY')"/>
+    </changeSet>
+
+    <changeSet id="GI-430-11" author="j.lethiec">
+        <dropColumn tableName="simcard_generation">
+            <column name="address1"/>
+            <column name="address2"/>
+            <column name="address3"/>
+            <column name="address4"/>
+            <column name="address5"/>
+            <column name="address6"/>
+            <column name="artwork"/>
+            <column name="simReference"/>
+            <column name="notify"/>
+            <column name="simSubType"/>
+            <column name="entity_code"/>
+            <column name="simType"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="GI-430-12" author="j.lethiec">
+        <dropColumn tableName="file_configuration">
+            <column name="code"/>
+            <column name="article"/>
+            <column name="type"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="GI-430-13" author="j.lethiec">
+        <delete tableName="SEQUENCE_ICCID"/>
+        <delete tableName="SEQUENCE_MSIN"/>
+        <delete tableName="prepay_batch"/>
+        <delete tableName="prepay_batch_aud"/>
+    </changeSet>
+
+    <changeSet id="GI-430-14" author="j.lethiec">
+        <addColumn tableName="prepay_batch">
+            <column name="inventory_pool_id" type="bigint(20)">
+                <constraints nullable="false" references="inventory_pool(id)" foreignKeyName="fk_batch_inventory_pool"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="prepay_batch">
+            <column name="simcard_generation_configuration_id" type="bigint(20)">
+                <constraints nullable="false" references="simcard_generation(id)" foreignKeyName="fk_batch_simcard_generation_configuration"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-430-15" author="j.lethiec">
+        <addColumn tableName="prepay_batch_aud">
+            <column name="inventory_pool_id" type="bigint(20)"/>
+        </addColumn>
+
+        <addColumn tableName="prepay_batch_aud">
+            <column name="simcard_generation_configuration_id" type="bigint(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-171-1" author="j.lethiec">
+        <dropColumn tableName="allotment_summary">
+            <column name="allotment_name"/>
+            <column name="allotment_date"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="GI-171-2" author="j.lethiec">
+        <dropColumn tableName="warehouse">
+            <column name="alert_threshold"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="GI-171-4" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="allotment_summary_aud"/></not>
+        </preConditions>
+        <createTable tableName="allotment_summary_aud">
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="allotment_id" type="bigint(20)"/>
+            <column name="batch_number" type="varchar(20)"/>
+            <column name="allotment_type" type="varchar(20)"/>
+            <column name="inventorypool_id" type="bigint(20)"/>
+            <column name="quantity" type="int(11)"/>
+            <column name="pack_with_handset" type="bit(1)"/>
+            <column name="price_plan" type="varchar(20)"/>
+            <column name="initial_credit" type="int(11)"/>
+            <column name="pre_provisioning_required" type="bit(1)"/>
+            <column name="sent_to_logistics_date" type="datetime"/>
+            <column name="provisioned_date" type="datetime"/>
+            <column name="creation_date" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

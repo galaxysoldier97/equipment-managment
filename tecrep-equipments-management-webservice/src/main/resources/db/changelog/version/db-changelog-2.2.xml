@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <property name="now" value="now()" dbms="mysql,mariadb"/>
+
+    <changeSet author="j.lethiec" id="GOSS-74-1">
+        <update tableName="allotment_summary">
+            <column name="creation_date" valueComputed="${now}"/>
+            <where>creation_date is null</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-74-2">
+        <addNotNullConstraint columnName="creation_date" tableName="allotment_summary" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="GOSS-87-1" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="inventory_pool" constraintName="fk_inventorypool_plmn_id"/>
+        <dropColumn tableName="inventory_pool" columnName="plmn_id"/>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="GOSS-113-1">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="allotment_summary" columnName="pre_provisioning_failures"/></not>
+        </preConditions>
+        <comment>allotment_summary table add column pre_provisioning_failures</comment>
+        <addColumn tableName="allotment_summary">
+            <column name="pre_provisioning_failures"  type="INT"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="GOSS-113-2">
+        <preConditions onFail="MARK_RAN">
+            <not><columnExists tableName="allotment_summary_aud" columnName="pre_provisioning_failures"/></not>
+        </preConditions>
+        <comment>allotment_summary_aud table add column pre_provisioning_failures</comment>
+        <addColumn tableName="allotment_summary_aud">
+            <column name="pre_provisioning_failures"  type="INT"></column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

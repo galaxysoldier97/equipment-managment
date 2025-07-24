@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="GOSS-1363-1" author="j.lethiec">
+        <!-- Removed fk to Batch from SEQUENCE_MSIN -->
+        <dropForeignKeyConstraint baseTableName="SEQUENCE_MSIN" constraintName="fk_sequence_msin_batch_id"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1363-2" author="j.lethiec">
+        <!-- Removed batch_id from SEQUENCE_MSIN -->
+        <dropColumn tableName="SEQUENCE_MSIN" columnName="batch_id"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1363-3" author="j.lethiec">
+        <!-- Removed fk to Batch from SEQUENCE_ICCID -->
+        <dropForeignKeyConstraint baseTableName="SEQUENCE_ICCID" constraintName="fk_sequence_iccid_batch_id"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1363-4" author="j.lethiec">
+        <!-- Removed batch_id from SEQUENCE_ICCID -->
+        <dropColumn tableName="SEQUENCE_ICCID" columnName="batch_id"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1363-5" author="j.lethiec">
+        <!-- Removed index from SEQUENCE_MSIN -->
+        <dropColumn tableName="SEQUENCE_MSIN" columnName="seq_index"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1363-6" author="j.lethiec">
+        <!-- Removed index from SEQUENCE_ICCID -->
+        <dropColumn tableName="SEQUENCE_ICCID" columnName="seq_index"/>
+    </changeSet>
+
+    <changeSet id="GI-520-1" author="j.lethiec">
+        <!-- Remove useless revision_type from cpe_aud -->
+        <dropColumn tableName="cpe_aud" columnName="revision_type"/>
+    </changeSet>
+
+    <changeSet id="GI-520-2" author="j.lethiec">
+        <!-- Remove useless status from cpe_aud -->
+        <dropColumn tableName="cpe_aud" columnName="status"/>
+    </changeSet>
+
+    <changeSet id="GI-520-3" author="j.lethiec">
+        <!-- Remove useless model_name from cpe_aud -->
+        <dropColumn tableName="cpe_aud" columnName="model_name"/>
+    </changeSet>
+
+    <changeSet id="GI-520-4" author="j.lethiec">
+        <!-- Remove useless provider_id from equipment_aud -->
+        <dropColumn tableName="equipment_aud" columnName="provider_id"/>
+    </changeSet>
+
+    <changeSet id="GI-520-5" author="j.lethiec">
+        <!-- Remove useless warehouse_id from equipment_aud -->
+        <dropColumn tableName="equipment_aud" columnName="warehouse_id"/>
+    </changeSet>
+
+    <changeSet id="GI-520-6" author="j.lethiec">
+        <!-- Remove useless revision_type from simcard_aud -->
+        <dropColumn tableName="simcard_aud" columnName="revision_type"/>
+    </changeSet>
+</databaseChangeLog>

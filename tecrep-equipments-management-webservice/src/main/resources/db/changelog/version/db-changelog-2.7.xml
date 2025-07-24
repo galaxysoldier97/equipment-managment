@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="GOSS-889-1" author="j.lethiec">
+        <!-- Add column name on MSIN sequence, to manage multiple different sequences at a time -->
+        <addColumn tableName="SEQUENCE_MSIN">
+            <column name="name" type="varchar(30)" defaultValue="DEFAULT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-889-2" author="j.lethiec">
+        <!-- Removed unused column iccidSeqPrefix on simcard_generation -->
+        <dropColumn tableName="simcard_generation" columnName="iccidSeqPrefix"/>
+    </changeSet>
+
+    <changeSet id="GOSS-889-3" author="j.lethiec">
+        <!-- Removed unused column fixedPrefix on simcard_generation -->
+        <dropColumn tableName="simcard_generation" columnName="fixedPrefix"/>
+    </changeSet>
+
+    <changeSet id="GOSS-889-4" author="j.lethiec">
+        <!-- Add a column in simcard_generation to link to a msin_sequence -->
+        <addColumn tableName="simcard_generation">
+            <column name="msin_sequence" type="varchar(30)" defaultValue="DEFAULT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

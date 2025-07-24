@@ -1,0 +1,24 @@
+SET
+    FOREIGN_KEY_CHECKS = 0;
+
+INSERT INTO SEQUENCE_BATCHNUMBER(seq_value)
+VALUES (0);
+
+INSERT INTO SEQUENCE_ICCID(name, seq_value)
+VALUES ('DEFAULT', 100000),
+       ('DEFAULT', 100001),
+       ('DEFAULT', 100002),
+       ('DEFAULT', 100003),
+       ('DEFAULT', 100004),
+       ('DEFAULT', 100005);
+
+INSERT INTO SEQUENCE_MSIN(name, seq_value)
+VALUES ('DEFAULT', 100000),
+       ('DEFAULT', 100001),
+       ('DEFAULT', 100002),
+       ('DEFAULT', 100003),
+       ('DEFAULT', 100004),
+       ('DEFAULT', 100005);
+
+SET
+    FOREIGN_KEY_CHECKS = 1;

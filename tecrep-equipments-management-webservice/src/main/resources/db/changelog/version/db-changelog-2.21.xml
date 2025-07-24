@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="MTOSS-1472-1" author="j.lethiec">
+        <!-- Migrate provider from equipment to simcard -->
+        <addColumn tableName="simcard">
+            <column name="provider_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1472-2" author="j.lethiec">
+        <!-- Add foreign key on simcard.provider_id -->
+        <addForeignKeyConstraint baseTableName="simcard" baseColumnNames="provider_id" constraintName="fk_provider_id"
+                                 referencedTableName="provider"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1472-3" author="j.lethiec">
+        <!-- Migrate provider from equipment to simcard -->
+        <sql>
+             UPDATE simcard s
+                 INNER JOIN equipment e ON s.id = e.id
+                 SET s.provider_id = e.provider_id
+             where e.provider_id is not null
+               And e.category = 'SIMCARD'
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-1472-4" author="j.lethiec">
+        <!-- Remove foreign key on provider_id -->
+        <dropForeignKeyConstraint baseTableName="equipment" constraintName="fk_equipment_provider_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1472-5" author="j.lethiec">
+        <!-- Remove column provider_id from equipment -->
+        <dropColumn tableName="equipment" columnName="provider_id"/>
+    </changeSet>
+    
+    <changeSet id="MTOSS-1529-1" author="g.fantappie">
+        <!-- Add column activation_code to simcard table -->
+        <addColumn tableName="simcard">
+            <column name="activation_code" type="varchar(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1529-2" author="g.fantappie">
+        <!-- Add column confirmation_code to simcard table-->
+        <addColumn tableName="simcard">
+            <column name="confirmation_code" type="integer"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1529-3" author="g.fantappie">
+        <!-- Add column activation_code to simcard_aud table -->
+        <addColumn tableName="simcard_aud">
+            <column name="activation_code" type="varchar(225)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1529-4" author="g.fantappie">
+        <!-- Add column confirmation_code to simcard_aud table-->
+        <addColumn tableName="simcard_aud">
+            <column name="confirmation_code" type="integer"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

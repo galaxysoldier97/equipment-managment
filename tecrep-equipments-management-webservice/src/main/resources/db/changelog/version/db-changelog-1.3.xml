@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="t.suignard" id="tecrep-equipments-management-1.3.0">
+        <createTable tableName="import_history">
+            <column autoIncrement="true" name="id" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="end" type="datetime(6)"/>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="import_status" type="ENUM('ABORTED', 'COMPLETED', 'STARTED')"/>
+            <column name="start" type="datetime(6)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-equipments-management-1.3.1">
+        <createTable tableName="import_error">
+            <column name="line" type="INT(10)"/>
+            <column name="error" type="TEXT"/>
+            <column name="import_history_id" type="BIGINT(19)"/>
+            <column autoIncrement="true" name="id" type="BIGINT(19)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tab" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-equipments-management-1.3.2">
+        <addForeignKeyConstraint baseColumnNames="import_history_id" baseTableName="import_error" constraintName="FK_file_error" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="import_history"/>
+    </changeSet>
+
+    <changeSet id="tecrep-equipments-management-1.3.2.1" author="brian.ohare@eir.ie" >
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="prepaybatchfile_aud"/>
+            </not>
+        </preConditions>
+        <createTable tableName="prepaybatchfile_aud">
+            <column name="batch_number" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="export_file_name" type="VARCHAR(40)"/>
+            <column name="import_file_name" type="VARCHAR(40)"/>
+            <column name="autoImport" type="BIT" />
+            <column name="export_creation_date" type="DATETIME"/>
+            <column name="import_return_date" type="DATETIME"/>
+            <column name="import_return_notify" type="VARCHAR(60)"/>
+            <column name="import_processing_date" type="DATETIME"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="prepaybatchfile_aud"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="brian.ohare@eir.ie" id="tecrep-equipments-management-1.3.003">
+        <preConditions onFail="MARK_RAN">
+                <tableExists tableName="PrepayBatchFile"/>
+        </preConditions>
+        <renameTable  newTableName="prepay_batch" oldTableName="PrepayBatchFile" />
+        <renameTable  newTableName="prepay_batch_aud" oldTableName="prepaybatchfile_aud" />
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.004">
+        <comment>prepay_batch configuration table rename columns</comment>
+        <renameColumn tableName="prepay_batch" oldColumnName="export_creation_date" newColumnName="creation_date" columnDataType="DATETIME" />
+        <renameColumn tableName="prepay_batch" oldColumnName="import_return_date" newColumnName="returned_date" columnDataType="DATETIME" />
+        <renameColumn tableName="prepay_batch" oldColumnName="import_processing_date" newColumnName="return_processed_date" columnDataType="DATETIME" />
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.005">
+        <comment>prepay_batch_aud configuration table rename columns</comment>
+        <renameColumn tableName="prepay_batch_aud" oldColumnName="export_creation_date" newColumnName="creation_date" columnDataType="DATETIME" />
+        <renameColumn tableName="prepay_batch_aud" oldColumnName="import_return_date" newColumnName="returned_date" columnDataType="DATETIME" />
+        <renameColumn tableName="prepay_batch_aud" oldColumnName="import_processing_date" newColumnName="return_processed_date" columnDataType="DATETIME" />
+    </changeSet>
+
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.006">
+        <comment>prepay_batch drop unwanted columns</comment>
+        <dropColumn tableName="prepay_batch">
+            <column name="autoImport"  />
+            <column name="import_return_notify"  />
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.007">
+        <comment>prepay_batch_aud drop unwanted columns</comment>
+        <dropColumn tableName="prepay_batch_aud">
+            <column name="autoImport"  />
+            <column name="import_return_notify"  />
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.008">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="InventoryPool"/>
+        </preConditions>
+        <renameTable  newTableName="inventory_pool" oldTableName="InventoryPool" />
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.009">
+        <comment>inventory_pool drop unwanted columns</comment>
+        <dropColumn tableName="inventory_pool">
+            <column name="description"  />
+        </dropColumn>
+    </changeSet>
+
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.010">
+        <modifyDataType  columnName="fixedPrefix" newDataType="VARCHAR(7)"
+          tableName="simcard_generation"/>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.011">
+        <comment>simcard_generation drop unwanted columns</comment>
+        <dropColumn tableName="simcard_generation">
+            <column name="autoImport"  />
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.012">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="allotment_summary" columnName="pre_provisioning"/>
+            <not><columnExists tableName="allotment_summary" columnName="pre_provisioning_required"/></not>
+        </preConditions>
+        <comment>allotment_summary table rename columns</comment>
+        <renameColumn tableName="allotment_summary" oldColumnName="pre_provisioning" newColumnName="pre_provisioning_required" columnDataType="BIT" />
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.012.1">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="allotment_summary" columnName="packaged_with_handset"/>
+            <not><columnExists tableName="allotment_summary" columnName="pack_with_handset"/></not>
+        </preConditions>
+        <comment>allotment_summary table rename columns</comment>
+        <renameColumn tableName="allotment_summary" oldColumnName="packaged_with_handset" newColumnName="pack_with_handset" columnDataType="BIT" />
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.013">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="allotment_summary" columnName="pre_provisioned_date"/>
+        </preConditions>
+        <comment>allotment_summary table drop Column pre_provisioned_date</comment>
+        <dropColumn tableName="allotment_summary">
+            <column name="pre_provisioned_date"  />
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.014">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="allotment_summary" columnName="provisioned_date"/>
+            </not>
+        </preConditions>
+        <comment>allotment_summary table add column provisioned_date</comment>
+        <addColumn tableName="allotment_summary">
+            <column name="provisioned_date"  type="DATETIME"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="b.ohare" id="tecrep-equipments-management-1.3.015">
+        <comment>allotment_summary table add column creation_date</comment>
+        <addColumn tableName="allotment_summary">
+            <column name="creation_date"  type="DATETIME"></column>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

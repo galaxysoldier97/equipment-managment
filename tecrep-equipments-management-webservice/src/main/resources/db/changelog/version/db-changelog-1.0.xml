@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-000">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="equipment"/>
+            </not>
+        </preConditions>
+        <comment>equipment table</comment>
+        <createTable tableName="equipment">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="serial_number" type="VARCHAR(20)"/>
+            <column name="external_number" type="VARCHAR(40)"/>
+            <column name="access_type" type="ENUM('FREEDHOME','DISE','DOCSIS','FTTH','ZATTOO','CONNECTIVITY','CAS')">
+            </column>
+            <column name="nature" type="ENUM('MAIN','ADDITIONAL')">
+            </column>
+            <column name="recyclable" type="BIT"/>
+            <column name="batch_number" type="VARCHAR(20)"/>
+            <column name="service_id" type="BIGINT"/>
+            <column name="paired_equipment_id" type="BIGINT"/>
+            <column name="provider_id" type="BIGINT"/>
+            <column name="warehouse_id" type="BIGINT"/>
+            <column name="preactivated" type="BIT"/>
+            <column name="status"
+                    type="ENUM('INSTORE', 'AVAILABLE', 'BOOKED', 'ASSIGNED', 'ACTIVATED','DEACTIVATED','ONHOLD','RETURNED','NOTRETURNED','DEPRECATED','REPACKAGING')"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="equipment"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-002">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="plmn"/>
+            </not>
+        </preConditions>
+        <comment>simcard plmn table</comment>
+        <createTable tableName="plmn">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="plmn_code" type="VARCHAR(32)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="network_name" type="VARCHAR(255)"/>
+            <column name="tadig_code" type="VARCHAR(32)"/>
+            <column name="country_iso_code" type="VARCHAR(8)"/>
+            <column name="country_name" type="VARCHAR(64)"/>
+            <column name="ranges_prefix" type="VARCHAR(2550)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="plmn"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-001">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="simcard"/>
+            </not>
+        </preConditions>
+        <comment>carte sim table</comment>
+        <createTable tableName="simcard">
+            <column name="id" type="BIGINT">
+                <constraints unique="true" nullable="false" foreignKeyName="fk_simcard_equipment_id"
+                             references="equipment(id)"/>
+            </column>
+            <column name="imsi_number" type="VARCHAR(15)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="imsi_sponsor_number" type="VARCHAR(15)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="puk1_code" type="VARCHAR(8)"/>
+            <column name="pin1_code" type="VARCHAR(4)"/>
+            <column name="puk2_code" type="VARCHAR(8)"/>
+            <column name="pin2_code" type="VARCHAR(4)"/>
+            <column name="authentification_key" type="VARCHAR(32)"/>
+            <column name="access_control_class" type="VARCHAR(4)"/>
+            <column name="sim_profile" type="ENUM('DEFAULT')">
+            </column>
+            <column name="ota_ciphering_key" type="VARCHAR(32)"/>
+            <column name="ota_signature_key" type="VARCHAR(32)"/>
+            <column name="put_description_key" type="VARCHAR(32)"/>
+            <column name="admin_code" type="VARCHAR(16)"/>
+            <column name="number" type="VARCHAR(32)"/>
+            <column name="plmn_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_simcard_plmn_id" references="plmn(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="simcard"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-003">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="provider"/>
+            </not>
+        </preConditions>
+        <comment>simcard provider table</comment>
+        <createTable tableName="provider">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(32)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="access_type"
+                    type="ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY','CAS')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provider"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-004">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="warehouse"/>
+            </not>
+        </preConditions>
+        <comment>simcard warehouse table</comment>
+        <createTable tableName="warehouse">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(32)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="reseller_code" type="VARCHAR(64)"/>
+            <column name="alert_threshold" type="INT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="warehouse"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-005">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cpe"/>
+            </not>
+        </preConditions>
+        <comment>simcard cpe table</comment>
+        <createTable tableName="cpe">
+            <column name="id" type="BIGINT">
+                <constraints unique="true" nullable="false" foreignKeyName="fk_cpe_equipment_id"
+                             references="equipment(id)"/>
+            </column>
+            <column name="mac_address_cpe" type="VARCHAR(17)"/>
+            <column name="mac_address_router" type="VARCHAR(17)"/>
+            <column name="mac_address_voip" type="VARCHAR(17)"/>
+            <column name="stb_serial_number" type="VARCHAR(40)"/>
+            <column name="chipset_id" type="VARCHAR(40)"/>
+            <column name="wifi_ssid" type="VARCHAR(40)"/>
+            <column name="wifi_password" type="VARCHAR(80)"/>
+            <column name="model_name" type="VARCHAR(20)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="cpe"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-006">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ancillary_equipment"/>
+            </not>
+        </preConditions>
+        <comment>simcard annex equipment table</comment>
+        <createTable tableName="ancillary_equipment">
+            <column name="id" type="BIGINT">
+                <constraints unique="true" nullable="false" foreignKeyName="fk_ancillary_equipment_equipment_id"
+                             references="equipment(id)"/>
+            </column>
+            <column name="mac_address" type="VARCHAR(17)"/>
+            <column name="model_name" type="VARCHAR(20)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="ancillary_equipment"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-009">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="equipment" foreignKeyName="fk_equipment_provider_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="provider_id"
+                                 baseTableName="equipment"
+                                 constraintName="fk_equipment_provider_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="provider"/>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-010">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="equipment" foreignKeyName="fk_equipment_warehouse_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="warehouse_id"
+                                 baseTableName="equipment"
+                                 constraintName="fk_equipment_warehouse_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="warehouse"/>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-013">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="audit_envers_info"/>
+            </not>
+        </preConditions>
+        <comment>simcard audit_envers_info table</comment>
+        <createTable tableName="audit_envers_info">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="timestamp" type="BIGINT"/>
+            <column name="user_id" type="VARCHAR(200)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="audit_envers_info"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-014">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="simcard_aud"/>
+            </not>
+        </preConditions>
+        <comment>carte sim table audit</comment>
+        <createTable tableName="simcard_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="imsi_number" type="VARCHAR(15)">
+            </column>
+            <column name="imsi_sponsor_number" type="VARCHAR(15)">
+            </column>
+            <column name="puk1_code" type="VARCHAR(8)"/>
+            <column name="pin1_code" type="VARCHAR(4)"/>
+            <column name="puk2_code" type="VARCHAR(8)"/>
+            <column name="pin2_code" type="VARCHAR(4)"/>
+            <column name="authentification_key" type="VARCHAR(32)"/>
+            <column name="access_control_class" type="VARCHAR(4)"/>
+            <column name="sim_profile" type="ENUM('DEFAULT')">
+            </column>
+            <column name="ota_ciphering_key" type="VARCHAR(32)"/>
+            <column name="ota_signature_key" type="VARCHAR(32)"/>
+            <column name="put_description_key" type="VARCHAR(32)"/>
+            <column name="admin_code" type="VARCHAR(16)"/>
+            <column name="number" type="VARCHAR(32)"/>
+            <column name="plmn_id" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="simcard_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-015">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="plmn_aud"/>
+            </not>
+        </preConditions>
+        <comment>simcard plmn audit table</comment>
+        <createTable tableName="plmn_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="plmn_code" type="VARCHAR(32)">
+            </column>
+            <column name="network_name" type="VARCHAR(255)"/>
+            <column name="tadig_code" type="VARCHAR(32)"/>
+            <column name="country_iso_code" type="VARCHAR(8)"/>
+            <column name="country_name" type="VARCHAR(64)"/>
+            <column name="ranges_prefix" type="VARCHAR(2550)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="plmn_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-016">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="provider_aud"/>
+            </not>
+        </preConditions>
+        <comment>simcard provider audit table</comment>
+        <createTable tableName="provider_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="name" type="VARCHAR(32)">
+            </column>
+            <column name="access_type"
+                    type="ENUM('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY','CAS')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provider_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-018">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cpe_aud"/>
+            </not>
+        </preConditions>
+        <comment>simcard cpe audit table</comment>
+        <createTable tableName="cpe_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="mac_address_cpe" type="VARCHAR(17)"/>
+            <column name="mac_address_router" type="VARCHAR(17)"/>
+            <column name="mac_address_voip" type="VARCHAR(17)"/>
+            <column name="stb_serial_number" type="VARCHAR(40)"/>
+            <column name="status" defaultValue="INSTOCK"
+                    type="ENUM('INSTOCK', 'AVAILABLE', 'BOOKED', 'ASSIGNED', 'PROVISIONED', 'ONHOLD', 'RETURNED', 'OUTOFORDER', 'REPACKAGING')"/>
+            <column name="usage" defaultValue="DOCSIS" type="ENUM('DOCSIS', 'FTTH')"/>
+            <column name="chipset_id" type="VARCHAR(40)"/>
+            <column name="wifi_ssid" type="VARCHAR(40)"/>
+            <column name="wifi_password" type="VARCHAR(80)"/>
+            <column name="model_name" type="VARCHAR(20)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="cpe_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-019">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ancillary_equipment_aud"/>
+            </not>
+        </preConditions>
+        <comment>simcard annex equipment audit table</comment>
+        <createTable tableName="ancillary_equipment_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="mac_address" type="VARCHAR(17)"/>
+            <column name="model_name" type="VARCHAR(20)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="ancillary_equipment_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-020">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="equipment_aud"/>
+            </not>
+        </preConditions>
+        <comment>simcard equipment table</comment>
+        <createTable tableName="equipment_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT(11)"/>
+            <column name="revision_type" type="TINYINT(4)"/>
+            <column name="serial_number" type="VARCHAR(20)"/>
+            <column name="external_number" type="VARCHAR(40)"/>
+            <column name="access_type" type="ENUM('FREEDHOME','DISE','DOCSIS','FTTH','ZATTOO','CONNECTIVITY','CAS')">
+            </column>
+            <column name="nature" type="ENUM('MAIN','ADDITIONAL')">
+            </column>
+            <column name="recyclable" type="BIT"/>
+            <column name="batch_number" type="VARCHAR(20)"/>
+            <column name="service_id" type="BIGINT"/>
+            <column name="paired_equipment_id" type="BIGINT"/>
+            <column name="provider_id" type="BIGINT"/>
+            <column name="warehouse_id" type="BIGINT"/>
+            <column name="preactivated" type="BIT"/>
+            <column name="status"
+                    type="ENUM('INSTORE', 'AVAILABLE', 'BOOKED', 'ASSIGNED', 'ACTIVATED','DEACTIVATED','ONHOLD','RETURNED','NOTRETURNED','DEPRECATED','REPACKAGING')"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="equipment_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.0.0-021">
+        <comment>imsiSponsorNumber can be null</comment>
+        <dropNotNullConstraint tableName="simcard" columnDataType="VARCHAR(15)" columnName="imsi_sponsor_number"/>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.1.0-022">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ancillary_equipment" columnName="independent_mode"/>
+            </not>
+        </preConditions>
+        <comment>Update ancillary_equipment add column independent_mode</comment>
+        <addColumn tableName="ancillary_equipment">
+            <column name="independent_mode" type="BIT" defaultValue="true"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-1.1.0-023">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ancillary_equipment_aud" columnName="independent_mode"/>
+            </not>
+        </preConditions>
+        <comment>Update ancillary_equipment_aud add column independent_mode</comment>
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="independent_mode" type="BIT" defaultValue="true"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

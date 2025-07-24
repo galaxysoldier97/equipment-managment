@@ -1,0 +1,10 @@
+producer: tecrep-equipments-management-service
+consumers:
+    - workflow-engine equipments connector [GW]
+    - inventory-integration [GI]
+    - tecrep-monitor [GMU]
+    - pom [GW]
+    - service-composite [GI]
+    - prepay [EPIC - GCT]
+    - customer360 [EPIC - GCT]
+    - customer-account-management [EPIC - GCT]

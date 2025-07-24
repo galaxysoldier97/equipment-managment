@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="g.fantappie" id="MTOSS-1880-1">
+        <createTable tableName="esim_notification">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="equipment_id" type="BIGINT">
+                <constraints unique="true" nullable="true" foreignKeyName="fk_equipment_id"
+                             references="equipment(id)"/>
+            </column>
+            <column name="iccid" type="VARCHAR(20)"/>
+            <column name="profile_type" type="VARCHAR(32)"/>
+            <column name="timestamp" type="TIMESTAMP"/>
+            <column name="notification_point_id" type="BIGINT"/>
+            <column name="check_point" type="VARCHAR(32)"/>
+            <column name="status" type="VARCHAR(32)"/>
+            <column name="message" type="VARCHAR(225)"/>
+            <column name="reason_code" type="VARCHAR(225)"/>
+            <column name="date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="MTOSS-1880-2">
+        <dropForeignKeyConstraint baseTableName="esim_notification" constraintName="fk_equipment_id"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="MTOSS-1880-3">
+        <!-- Drop column to remove unique constraints -->
+       <dropColumn columnName="equipment_id" tableName="esim_notification"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="MTOSS-1880-4">
+        <addColumn tableName="esim_notification">
+            <column name="equipment_id" type="BIGINT" >
+                <constraints foreignKeyName="fk_equipment_id"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="MTOSS-1880-5">
+        <modifyDataType  columnName="check_point"
+                         newDataType="varchar(225)"
+                         tableName="esim_notification"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="GI-726-1" author="g.fantappie">
+        <!-- adding column number_recycle to equipment table -->
+        <addColumn tableName="equipment">
+            <column name="number_recycles" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-726-2" author="g.fantappie">
+        <!--adding column number_recycle to equipment_aud table -->
+        <addColumn tableName="equipment_aud">
+            <column name="number_recycles" type="bigint" defaultValue="0"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-726-3" author="g.fantappie">
+        <dropColumn tableName="equipment" columnName="number_recycles"/>
+    </changeSet>
+
+    <changeSet id="GI-726-4" author="g.fantappie">
+        <dropColumn tableName="equipment_aud" columnName="number_recycles"/>
+    </changeSet>
+
+    <changeSet id="GI-726-5" author="g.fantappie">
+        <!--adding column number_recycle to cpe table -->
+        <addColumn tableName="cpe">
+            <column name="number_recycles" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-726-6" author="g.fantappie">
+        <!--adding column number_recycle to cpe_aud table -->
+        <addColumn tableName="cpe_aud">
+            <column name="number_recycles" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-726-7" author="g.fantappie">
+        <!--adding column number_recycle to ancillary table -->
+        <addColumn tableName="ancillary_equipment">
+            <column name="number_recycles" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-726-8" author="g.fantappie">
+        <!--adding column number_recycle to ancillary_aud table -->
+        <addColumn tableName="ancillary_equipment_aud">
+            <column name="number_recycles" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GI-824-1" author="j.lethiec">
+        <!-- Change allotment_type from enum to varchar -->
+        <modifyDataType tableName="allotment_summary" columnName="allotment_type" newDataType="varchar(50)"/>
+    </changeSet>
+
+    <changeSet id="GI-824-2" author="j.lethiec">
+        <!-- Change allotment_type in audit from varchar(20) to varchar(50) -->
+        <modifyDataType tableName="allotment_summary_aud" columnName="allotment_type" newDataType="varchar(50)"/>
+    </changeSet>
+
+    <changeSet id="GI-766-1" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="ancillary_equipment"/>
+            </not>
+        </preConditions>
+
+        <!-- drop ancillary_eqm foreign key -->
+        <dropForeignKeyConstraint baseTableName="ancillary_equipment"
+                                  constraintName="fk_ancillary_equipment_equipment_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-2" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="ancillary_equipment"/>
+            </not>
+        </preConditions>
+
+        <!-- drop index id -->
+        <dropIndex tableName="ancillary_equipment" indexName="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-3" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="ancillary_equipment"/>
+            </not>
+        </preConditions>
+
+        <!-- add primary key -->
+        <addPrimaryKey tableName="ancillary_equipment" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-4" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_ancillary_equipment_equipment_id"/>
+            </not>
+        </preConditions>
+
+        <!-- re-add foreign key -->
+        <addForeignKeyConstraint baseTableName="ancillary_equipment" baseColumnNames="id"
+                                 constraintName="fk_ancillary_equipment_equipment_id" referencedTableName="equipment"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-5" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="simcard"/>
+            </not>
+        </preConditions>
+
+        <!-- drop sim foreign key -->
+        <dropForeignKeyConstraint baseTableName="simcard" constraintName="fk_simcard_equipment_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-6" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="simcard"/>
+            </not>
+        </preConditions>
+
+        <!-- drop index id -->
+        <dropIndex tableName="simcard" indexName="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-7" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="simcard"/>
+            </not>
+        </preConditions>
+
+        <!-- add primary key -->
+        <addPrimaryKey tableName="simcard" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-8" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_simcard_equipment_id"/>
+            </not>
+        </preConditions>
+
+        <!-- re-add foreign key -->
+        <addForeignKeyConstraint baseTableName="simcard" baseColumnNames="id" constraintName="fk_simcard_equipment_id"
+                                 referencedTableName="equipment"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-9" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="cpe"/>
+            </not>
+        </preConditions>
+
+        <!-- drop cpe foreign key -->
+        <dropForeignKeyConstraint baseTableName="cpe"
+                                  constraintName="fk_cpe_equipment_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-10" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="cpe"/>
+            </not>
+        </preConditions>
+
+        <!-- drop index id -->
+        <dropIndex tableName="cpe" indexName="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-11" author="g.fantappie">
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <primaryKeyExists tableName="cpe"/>
+            </not>
+        </preConditions>
+
+        <!-- add primary key -->
+        <addPrimaryKey tableName="cpe" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-12" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_cpe_equipment_id"/>
+            </not>
+        </preConditions>
+
+        <!-- re-add foreign key -->
+        <addForeignKeyConstraint baseTableName="cpe" baseColumnNames="id"
+                                 constraintName="fk_cpe_equipment_id" referencedTableName="equipment"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-13" author="g.fantappie">
+        <!-- drop duplicate foreign key cpe -->
+        <preConditions onFail="MARK_RAN">
+                <foreignKeyConstraintExists foreignKeyName="cpe_ibfk_1"/>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="cpe" constraintName="cpe_ibfk_1"/>
+    </changeSet>
+</databaseChangeLog>

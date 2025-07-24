@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="GOSS-1245-1" author="j.lethiec">
+        <!-- Add value MOBILE to equipment.access_type -->
+        <modifyDataType tableName="equipment" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-2" author="j.lethiec">
+        <!-- Add value MOBILE to equipment_model.access_type -->
+        <modifyDataType tableName="equipment_model" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-3" author="j.lethiec">
+        <!-- Add value MOBILE to provider.access_type -->
+        <modifyDataType tableName="provider" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-4" author="j.lethiec">
+        <!-- Set equipment_aud.access_type as String -->
+        <modifyDataType tableName="equipment_aud" columnName="access_type" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-5" author="j.lethiec">
+        <!-- Set provider_aud.access_type as String -->
+        <modifyDataType tableName="provider_aud" columnName="access_type" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-6" author="j.lethiec">
+        <!-- Add activity on equipment -->
+        <addColumn tableName="equipment">
+            <column name="activity" type="ENUM('MOBILE', 'INTERNET', 'TELEPHONY', 'TV', 'NDD', 'OX', 'MEVO')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-7" author="j.lethiec">
+        <!-- Add activity on equipment_aud -->
+        <addColumn tableName="equipment_aud">
+            <column name="activity" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>
