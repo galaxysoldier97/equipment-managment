@@ -12,6 +12,7 @@ import mc.monacotelecom.tecrep.equipments.importer.implementations.ancillary.IAn
 import mc.monacotelecom.tecrep.equipments.repository.AncillaryRepository;
 import mc.monacotelecom.tecrep.equipments.repository.AncillaryImportErrorRepository;
 import mc.monacotelecom.tecrep.equipments.repository.EquipmentModelRepository;
+import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.repository.WarehouseRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.csv.CSVFormat;
@@ -104,6 +105,12 @@ public class AncillaryImportService {
         if (importer == null) {
             throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FORMAT_NOT_SUPPORTED", format);
         }
+
+        // 1.1) Si el importador  viene con el format = SAP_ANCILLARY_TEMP
+        Optional<Long> jobIdIfHandled = handleSapAncillaryTempFormat(file, format, continueOnError);
+        if (jobIdIfHandled.isPresent()) {
+            return jobIdIfHandled.get();
+        } 
 
         // 2) Crear el registro de job con estado PENDING
         AncillaryImportJob job = new AncillaryImportJob();
@@ -223,15 +230,9 @@ public void executeImportJob(Long jobId) {
                     else continue;
                 }
 
-                // Buscar EquipmentModel
-                var modelOpt = equipmentModelRepository.findByName(modelName);
-
-                //  si existe mas de un modelo con el mismo nombre, se filtra por categoría ANCILLARY
-                if (modelOpt.isEmpty()) {
-                    modelOpt = equipmentModelRepository.findByNameAndCategory(modelName, EquipmentCategory.ANCILLARY);
-                }
-              
-
+       
+                var modelOpt =  equipmentModelRepository.findByNameAndCategory(modelName, EquipmentModelCategory.ANCILLARY);
+                 
                 if (modelOpt.isEmpty()) {
                     AncillaryImportError errEnt = new AncillaryImportError();
                     errEnt.setJob(job);
@@ -243,7 +244,13 @@ public void executeImportJob(Long jobId) {
                     else continue;
                 }
                 var equipmentModel = modelOpt.get();
-
+                //imprimir cantidad de modelos encontrados
+               
+                //si ahi mas de un modelo con ese nombre, se lanza una excepción equipmentModel
+                if (equipmentModel.getCategory() != EquipmentModelCategory.ANCILLARY) {
+                    throw new RuntimeException("El modelo " + modelName + " no es de categoría ANCILLARY");
+                }
+                
                 // Buscar Warehouse por defecto
                 var whOpt = warehouseRepository.findById(defaultWarehouseId);
                 if (whOpt.isEmpty()) {
@@ -604,6 +611,57 @@ public void executeImportJob(Long jobId) {
         return importErrorRepo.findAllByJob_Id(jobId);
     }
  
+
+    /**
+     * Si el formato es SAP_ANCILLARY_TEMP y las cabeceras requeridas existen,
+     * crea un Job con estado PENDING y no lanza procesamiento.
+     * SAMUEL TORRES: Esto es para manejar un formato temporal específico
+     */
+        private Optional<Long> handleSapAncillaryTempFormat(MultipartFile file, String format, boolean continueOnError) {
+    if (!"SAP_ANCILLARY_TEMP".equalsIgnoreCase(format)) {
+        return Optional.empty();
+    }
+
+    try (
+        Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
+    ) {
+        Map<String, Integer> headers = parser.getHeaderMap();
+
+        // ✅ Validamos si faltan columnas obligatorias
+        boolean hasPoNo = headers.containsKey("PO_NO");
+        boolean hasBoxSn = headers.containsKey("BOX_SN");
+        boolean hasNodeModel = headers.containsKey("NODE_MODEL");
+
+        if (!hasPoNo || !hasBoxSn || !hasNodeModel) {
+            throw new EqmValidationException(
+                localizedMessageBuilder,
+                "IMPORT_HEADER_MISSING",
+                "Faltan columnas obligatorias: PO_NO, BOX_SN, NODE_MODEL"
+            );
+        }
+
+        // ✅ Cabeceras válidas: registramos job como PENDING
+        AncillaryImportJob job = new AncillaryImportJob();
+        job.setOriginalFilename(file.getOriginalFilename());
+        job.setFormat(format);
+        job.setContinueOnError(continueOnError);
+        job.setStatus(AncillaryImportJob.JobStatus.PENDING);
+        job.setStartedAt(LocalDateTime.now());
+        job.setTotalLines(0);
+        job.setSuccessfulLines(0);
+        job.setErrorCount(0);
+        job = jobRepository.save(job);
+
+        log.info("Import SAP_ANCILLARY_TEMP validado con cabeceras válidas. Job ID: {}", job.getId());
+        return Optional.of(job.getId());
+
+    } catch (IOException e) {
+        throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
+    }
+}
+
+
 
             
 }

@@ -52,7 +52,7 @@ public class CustomFormatAncillaryImporter
     @Override
     public Set<String> getNames() {
         log.trace("getNames called -->" );
-        return Set.of("CUSTOM_FORMAT", "CUSTOM_ANCILLARY", "FORMATO_PERSONALIZADO");
+        return Set.of("CUSTOM_FORMAT", "CUSTOM_ANCILLARY", "FORMATO_PERSONALIZADO","SAP_ANCILLARY_TEMP");
     }
 
     @Override
