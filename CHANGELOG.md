@@ -1,5 +1,9 @@
 # tecrep-equipments-management changelog
 
+## 2.30.0
+* Added po_ancillary_equipment_sap and homologacion_material_sap tables
+* Updated equipments_temp table with po_ancillaryeqm_sap_id column
+
 ## 2.29.0
 * Added status and order_upload_id columns to equipments_temp table
 

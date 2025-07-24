@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet author="tecrep" id="rename-po-no-column">
+        <renameColumn tableName="equipments_temp"
+                      oldColumnName="po_no"
+                      newColumnName="po_ancillaryeqm_sap_id"
+                      columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet author="tecrep" id="add-not-null-po-ancillaryeqm-sap-id">
+        <addNotNullConstraint tableName="equipments_temp"
+                              columnName="po_ancillaryeqm_sap_id"
+                              columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet author="tecrep" id="drop-status-default-equipments-temp">
+        <dropDefaultValue tableName="equipments_temp"
+                          columnName="status"/>
+    </changeSet>
+
+    <changeSet author="tecrep" id="create-po-ancillary-equipment-sap">
+        <createTable tableName="po_ancillary_equipment_sap">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="po_no" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(32)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="tecrep" id="fk-equipments-temp-po-ancillary">
+        <addForeignKeyConstraint baseTableName="equipments_temp"
+                                 baseColumnNames="po_ancillaryeqm_sap_id"
+                                 constraintName="fk_equipments_temp_po_ancillary"
+                                 referencedTableName="po_ancillary_equipment_sap"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet author="tecrep" id="create-homologacion-material-sap">
+        <createTable tableName="homologacion_material_sap">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_material_sap" type="VARCHAR(255)"/>
+            <column name="name_sap" type="VARCHAR(255)"/>
+            <column name="equipment_model_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
