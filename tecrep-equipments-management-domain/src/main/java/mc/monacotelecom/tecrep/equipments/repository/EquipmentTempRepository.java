@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public interface EquipmentTempRepository extends JpaRepository<EquipmentTemp, Long> {
 
-    Optional<EquipmentTemp> findByPoNo(String poNo);
+    Optional<EquipmentTemp> findByPoAncillaryeqmSapId(Long poAncillaryeqmSapId);
 
     Optional<EquipmentTemp> findByBoxSn(String boxSn);
 
