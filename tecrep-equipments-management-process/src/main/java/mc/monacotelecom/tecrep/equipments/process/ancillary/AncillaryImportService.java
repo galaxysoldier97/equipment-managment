@@ -671,6 +671,8 @@ public void executeImportJob(Long jobId) {
         }
 
         //Antes de Guardar en la tabla maestra, validar si el PO_NO ya existe,
+        String poNoValue = poNos.iterator().next();
+        String modelValue = nodeModels.iterator().next();
         // 3.1) Validar si el PO_NO ya existe en la tabla maestra
         if (poAncillaryEquipmentSapRepository.existsByPoNo(poNoValue)) {
             job.setStatus(AncillaryImportJob.JobStatus.FAILED);
@@ -679,11 +681,11 @@ public void executeImportJob(Long jobId) {
             throw new EqmValidationException(localizedMessageBuilder,
              "IMPORT_PO_NO_EXISTS", "El PO_NO ya existe en la tabla maestra");
         }
-    
+
         // 4. Guardar PO en tabla maestra
-        String poNoValue = poNos.iterator().next();
         PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
         poEntity.setPoNo(poNoValue);
+        poEntity.setModel(modelValue);
         poEntity.setStatus("init");
         poAncillaryEquipmentSapRepository.save(poEntity);
 
