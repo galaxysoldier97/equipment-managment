@@ -670,6 +670,16 @@ public void executeImportJob(Long jobId) {
              "Todos los registros deben tener el mismo PO_NO y/o NODE_MODEL");
         }
 
+        //Antes de Guardar en la tabla maestra, validar si el PO_NO ya existe,
+        // 3.1) Validar si el PO_NO ya existe en la tabla maestra
+        if (poAncillaryEquipmentSapRepository.existsByPoNo(poNoValue)) {
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+            throw new EqmValidationException(localizedMessageBuilder,
+             "IMPORT_PO_NO_EXISTS", "El PO_NO ya existe en la tabla maestra");
+        }
+    
         // 4. Guardar PO en tabla maestra
         String poNoValue = poNos.iterator().next();
         PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
