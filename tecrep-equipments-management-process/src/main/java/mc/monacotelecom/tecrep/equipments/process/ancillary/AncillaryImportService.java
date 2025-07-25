@@ -27,6 +27,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.web.multipart.MultipartFile;
 import mc.monacotelecom.tecrep.equipments.enums.Status;
 import mc.monacotelecom.tecrep.equipments.repository.AncillaryImportJobRepository;
+import mc.monacotelecom.tecrep.equipments.repository.PoAncillaryEquipmentSapRepository;
+import mc.monacotelecom.tecrep.equipments.entity.PoAncillaryEquipmentSap;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.Files;
@@ -61,7 +63,8 @@ public class AncillaryImportService {
     private final AncillaryImportErrorRepository importErrorRepo; // repo para errores
     private final AncillaryEquipmentFactory equipmentFactory;
 
-     private final AncillaryImportJobRepository jobRepository;
+    private final AncillaryImportJobRepository jobRepository;
+    private final PoAncillaryEquipmentSapRepository poAncillaryEquipmentSapRepository;
 
      
 
@@ -622,27 +625,12 @@ public void executeImportJob(Long jobId) {
         return Optional.empty();
     }
 
+    AncillaryImportJob job = new AncillaryImportJob();
     try (
         Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
         CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
     ) {
-        Map<String, Integer> headers = parser.getHeaderMap();
-
-        // ✅ Validamos si faltan columnas obligatorias
-        boolean hasPoNo = headers.containsKey("PO_NO");
-        boolean hasBoxSn = headers.containsKey("BOX_SN");
-        boolean hasNodeModel = headers.containsKey("NODE_MODEL");
-
-        if (!hasPoNo || !hasBoxSn || !hasNodeModel) {
-            throw new EqmValidationException(
-                localizedMessageBuilder,
-                "IMPORT_HEADER_MISSING",
-                "Faltan columnas obligatorias: PO_NO, BOX_SN, NODE_MODEL"
-            );
-        }
-
-        // ✅ Cabeceras válidas: registramos job como PENDING
-        AncillaryImportJob job = new AncillaryImportJob();
+        // 1. Crear el job con estado PENDING desde el inicio
         job.setOriginalFilename(file.getOriginalFilename());
         job.setFormat(format);
         job.setContinueOnError(continueOnError);
@@ -653,15 +641,73 @@ public void executeImportJob(Long jobId) {
         job.setErrorCount(0);
         job = jobRepository.save(job);
 
-        log.info("Import SAP_ANCILLARY_TEMP validado con cabeceras válidas. Job ID: {}", job.getId());
+        // 2. Validar cabeceras
+        Map<String, Integer> headers = parser.getHeaderMap();
+        if (!headers.containsKey("PO_NO") || !headers.containsKey("BOX_SN") || !headers.containsKey("NODE_MODEL")) {
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+            throw new EqmValidationException(localizedMessageBuilder, "IMPORT_HEADER_MISSING", "Faltan columnas obligatorias: PO_NO, BOX_SN, NODE_MODEL");
+        }
+
+        // 3. Validar que todos los PO_NO sean iguales
+        Set<String> poNos = new HashSet<>();
+        Set<String> nodeModels = new HashSet<>();
+        for (CSVRecord record : parser) {
+            String po = record.get("PO_NO").trim();
+            String model = record.get("NODE_MODEL").trim();
+
+            if (!po.isEmpty()) poNos.add(po);
+            if (!model.isEmpty()) nodeModels.add(model);
+        }
+
+        if (poNos.size() != 1 || nodeModels.size() != 1) {
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+            throw new EqmValidationException(localizedMessageBuilder,
+             IMPORT_DIFFERENT_PO_NO,
+             "Todos los registros deben tener el mismo PO_NO y/o NODE_MODEL");
+        }
+
+        // 4. Guardar PO en tabla maestra
+        String poNoValue = poNos.iterator().next();
+        PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
+        poEntity.setPoNo(poNoValue);
+        poEntity.setStatus("init");
+        poAncillaryEquipmentSapRepository.save(poEntity);
+
+        // 5. Guardar archivo en disco
+        String inputDir = resultBasePath + "/inputs";
+        Files.createDirectories(Path.of(inputDir));
+        String savedName = "job-" + job.getId() + "_" + file.getOriginalFilename();
+        Path destination = Path.of(inputDir, savedName);
+        file.transferTo(destination.toFile());
+
+        job.setInputFilePath(destination.toString());
+
+        // 6. Marcar como SUCCESS y cerrar job
+        job.setStatus(AncillaryImportJob.JobStatus.SUCCESS);
+        job.setFinishedAt(LocalDateTime.now());
+        jobRepository.save(job);
+
+        log.info("SAP_ANCILLARY_TEMP: PO {} registrado, archivo guardado, Job #{} SUCCESS", poNoValue, job.getId());
         return Optional.of(job.getId());
 
     } catch (IOException e) {
+        job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+        job.setFinishedAt(LocalDateTime.now());
+        jobRepository.save(job);
         throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
+    } catch (EqmValidationException ve) {
+        if (job.getId() != null) {
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+        }
+        throw ve;
     }
 }
 
-
-
-            
+           
 }
