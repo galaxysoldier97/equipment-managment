@@ -1,5 +1,8 @@
 # tecrep-equipments-management changelog
 
+## 2.33.0
+* Added endpoint to list all records from homologacion_material_sap table
+
 ## 2.32.0
 * Added endpoint to list all records from po_ancillary_equipment_sap table
 
