@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelNameDTOV2;
 import mc.monacotelecom.tecrep.equipments.enums.AccessType;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.service.EquipmentModelService;
@@ -87,7 +88,7 @@ public class EquipmentModelControllerV2 {
     @Operation(summary = "Get equipment model names by category and access type")
     @ApiResponse(responseCode = "200", description = "Names retrieved")
     @GetMapping("/names")
-    public List<String> getNames(@RequestParam EquipmentModelCategory category,
+    public List<EquipmentModelNameDTOV2> getNames(@RequestParam EquipmentModelCategory category,
                                  @RequestParam AccessType accessType) {
         return equipmentModelService.getNamesByCategoryAndAccessType(category, accessType);
     }
