@@ -4,6 +4,7 @@ import mc.monacotelecom.tecrep.equipments.dto.EquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelNameDTOV2;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentModel;
 import mc.monacotelecom.tecrep.equipments.enums.AccessType;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
@@ -95,7 +96,7 @@ public interface IEquipmentModelProcess {
      *
      * @param category    equipment model category
      * @param accessType  equipment model access type
-     * @return list of model names
+     * @return list of model ids and names
      */
-    List<String> getNamesByCategoryAndAccessType(EquipmentModelCategory category, AccessType accessType);
+    List<EquipmentModelNameDTOV2> getNamesByCategoryAndAccessType(EquipmentModelCategory category, AccessType accessType);
 }

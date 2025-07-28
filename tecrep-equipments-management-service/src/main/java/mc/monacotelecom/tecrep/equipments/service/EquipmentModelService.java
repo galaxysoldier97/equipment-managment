@@ -5,6 +5,7 @@ import mc.monacotelecom.tecrep.equipments.dto.EquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelNameDTOV2;
 import mc.monacotelecom.tecrep.equipments.enums.AccessType;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.process.EquipmentModelProcess;
@@ -71,7 +72,7 @@ public class EquipmentModelService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
+    public List<EquipmentModelNameDTOV2> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
         return equipmentModelProcess.getNamesByCategoryAndAccessType(category, accessType);
     }
 

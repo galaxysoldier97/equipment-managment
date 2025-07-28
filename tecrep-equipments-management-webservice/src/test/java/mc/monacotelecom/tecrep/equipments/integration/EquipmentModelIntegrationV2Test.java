@@ -210,4 +210,16 @@ class EquipmentModelIntegrationV2Test extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.errorCode").value("Conflict"))
                 .andExpect(jsonPath("$.errorMessage").value("An equipment model with name 'name-1' and category 'CPE' already exists"));
     }
+
+    @Test
+    void getNames_success() throws Exception {
+        mockMvc.perform(get(baseUrl + "/names")
+                        .param("category", "CPE")
+                        .param("accessType", "DOCSIS"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("name-1"));
+    }
 }

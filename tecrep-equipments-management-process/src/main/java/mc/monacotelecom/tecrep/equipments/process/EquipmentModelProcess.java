@@ -8,6 +8,7 @@ import mc.monacotelecom.tecrep.equipments.dto.EquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelNameDTOV2;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentModel;
 import mc.monacotelecom.tecrep.equipments.entity.Provider;
 import mc.monacotelecom.tecrep.equipments.enums.AccessType;
@@ -160,7 +161,10 @@ public class EquipmentModelProcess implements IEquipmentModelProcess {
     }
 
     @Override
-    public List<String> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
-        return equipmentModelRepository.findNamesByCategoryAndAccessType(category, accessType);
+    public List<EquipmentModelNameDTOV2> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
+        return equipmentModelRepository.findIdAndNameByCategoryAndAccessType(category, accessType)
+                .stream()
+                .map(p -> new EquipmentModelNameDTOV2(p.getId(), p.getName()))
+                .collect(java.util.stream.Collectors.toList());
     }
 }
