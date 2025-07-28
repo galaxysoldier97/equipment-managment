@@ -5,7 +5,10 @@ import mc.monacotelecom.tecrep.equipments.dto.EquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.enums.AccessType;
+import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.process.EquipmentModelProcess;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +63,16 @@ public class EquipmentModelService {
     @Transactional(readOnly = true)
     public Page<EquipmentModelDTOV2> search(final SearchEquipmentModelDTO dto, final Pageable pageable) {
         return equipmentModelProcess.search(dto, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccessType> getAccessTypesByCategory(final EquipmentModelCategory category) {
+        return equipmentModelProcess.getAccessTypesByCategory(category);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
+        return equipmentModelProcess.getNamesByCategoryAndAccessType(category, accessType);
     }
 
     @Transactional

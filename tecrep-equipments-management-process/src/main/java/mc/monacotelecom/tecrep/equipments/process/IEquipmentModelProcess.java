@@ -5,7 +5,9 @@ import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentModel;
+import mc.monacotelecom.tecrep.equipments.enums.AccessType;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -79,4 +81,21 @@ public interface IEquipmentModelProcess {
     Page<EquipmentModelDTO> getAllV1(Pageable pageable);
 
     Page<EquipmentModelDTOV2> search(SearchEquipmentModelDTO dto, Pageable pageable);
+
+    /**
+     * Get the list of access types for a specific category
+     *
+     * @param category equipment model category
+     * @return list of {@link AccessType}
+     */
+    List<AccessType> getAccessTypesByCategory(EquipmentModelCategory category);
+
+    /**
+     * Get equipment model names for a category and access type
+     *
+     * @param category    equipment model category
+     * @param accessType  equipment model access type
+     * @return list of model names
+     */
+    List<String> getNamesByCategoryAndAccessType(EquipmentModelCategory category, AccessType accessType);
 }
