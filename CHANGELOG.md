@@ -1,5 +1,11 @@
 # tecrep-equipments-management changelog
 
+## 2.32.0
+* Added endpoint to list all records from po_ancillary_equipment_sap table
+
+## 2.31.0
+* Added model column to po_ancillary_equipment_sap table
+
 ## 2.30.0
 * Added po_ancillary_equipment_sap and homologacion_material_sap tables
 * Updated equipments_temp table with po_ancillaryeqm_sap_id column

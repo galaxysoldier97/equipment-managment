@@ -21,6 +21,9 @@ public class PoAncillaryEquipmentSap implements Serializable {
     @Column(name = "po_no", length = 50)
     private String poNo;
 
+    @Column(name = "model", length = 50)
+    private String model;
+
     @Column(name = "status")
     private String status;
 }
