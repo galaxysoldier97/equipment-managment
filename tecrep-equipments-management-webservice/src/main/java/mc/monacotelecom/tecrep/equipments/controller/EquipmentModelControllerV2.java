@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import mc.monacotelecom.tecrep.equipments.dto.request.EquipmentModelCreateDTO;
 import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentModelDTO;
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
+import mc.monacotelecom.tecrep.equipments.enums.AccessType;
+import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.service.EquipmentModelService;
+import java.util.List;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +75,20 @@ public class EquipmentModelControllerV2 {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final long id) {
         equipmentModelService.delete(id);
+    }
+
+    @Operation(summary = "Get access types for a category")
+    @ApiResponse(responseCode = "200", description = "Access types retrieved")
+    @GetMapping("/access-types")
+    public List<AccessType> getAccessTypes(@RequestParam EquipmentModelCategory category) {
+        return equipmentModelService.getAccessTypesByCategory(category);
+    }
+
+    @Operation(summary = "Get equipment model names by category and access type")
+    @ApiResponse(responseCode = "200", description = "Names retrieved")
+    @GetMapping("/names")
+    public List<String> getNames(@RequestParam EquipmentModelCategory category,
+                                 @RequestParam AccessType accessType) {
+        return equipmentModelService.getNamesByCategoryAndAccessType(category, accessType);
     }
 }

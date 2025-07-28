@@ -10,6 +10,7 @@ import mc.monacotelecom.tecrep.equipments.dto.request.search.SearchEquipmentMode
 import mc.monacotelecom.tecrep.equipments.dto.v2.EquipmentModelDTOV2;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentModel;
 import mc.monacotelecom.tecrep.equipments.entity.Provider;
+import mc.monacotelecom.tecrep.equipments.enums.AccessType;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.exceptions.EqmConflictException;
 import mc.monacotelecom.tecrep.equipments.exceptions.EqmNotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 
 import static mc.monacotelecom.tecrep.equipments.translation.TranslationMessages.*;
@@ -150,5 +152,15 @@ public class EquipmentModelProcess implements IEquipmentModelProcess {
         }
 
         equipmentModelRepository.delete(equipmentModel);
+    }
+
+    @Override
+    public List<AccessType> getAccessTypesByCategory(final EquipmentModelCategory category) {
+        return equipmentModelRepository.findDistinctAccessTypesByCategory(category);
+    }
+
+    @Override
+    public List<String> getNamesByCategoryAndAccessType(final EquipmentModelCategory category, final AccessType accessType) {
+        return equipmentModelRepository.findNamesByCategoryAndAccessType(category, accessType);
     }
 }
