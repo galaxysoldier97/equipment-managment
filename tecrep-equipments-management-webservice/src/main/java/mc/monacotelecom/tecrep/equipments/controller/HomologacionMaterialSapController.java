@@ -5,10 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
 import mc.monacotelecom.tecrep.equipments.service.HomologacionMaterialSapService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,18 @@ public class HomologacionMaterialSapController {
     @GetMapping
     public List<HomologacionMaterialSap> getAll() {
         return service.getAll();
+    }
+
+    @Operation(summary = "Add a homologacion material record")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public HomologacionMaterialSap add(@RequestBody HomologacionMaterialSap homologacionMaterialSap) {
+        return service.add(homologacionMaterialSap);
+    }
+
+    @Operation(summary = "Update a homologacion material record")
+    @PatchMapping
+    public HomologacionMaterialSap update(@RequestBody HomologacionMaterialSap homologacionMaterialSap) {
+        return service.update(homologacionMaterialSap);
     }
 }
