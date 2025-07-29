@@ -18,4 +18,14 @@ public class HomologacionMaterialSapService {
     public List<HomologacionMaterialSap> getAll() {
         return repository.findAll();
     }
+
+    @Transactional
+    public HomologacionMaterialSap add(HomologacionMaterialSap homologacionMaterialSap) {
+        return repository.save(homologacionMaterialSap);
+    }
+
+    @Transactional
+    public HomologacionMaterialSap update(HomologacionMaterialSap homologacionMaterialSap) {
+        return repository.save(homologacionMaterialSap);
+    }
 }
