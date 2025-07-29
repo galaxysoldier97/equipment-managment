@@ -1,14 +1,17 @@
 package mc.monacotelecom.tecrep.equipments.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
 import mc.monacotelecom.tecrep.equipments.service.HomologacionMaterialSapService;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Tag(name = "Homologacion Material SAP API")
 @CrossOrigin
@@ -20,12 +23,13 @@ public class HomologacionMaterialSapController {
     private final HomologacionMaterialSapService service;
 
     @Operation(summary = "Get all homologacion material records")
+    @PageableAsQueryParam
     @GetMapping
-    public List<HomologacionMaterialSap> getAll() {
-        return service.getAll();
+    public Page<HomologacionMaterialSap> getAll(@Parameter(hidden = true) Pageable pageable) {
+        return service.getAll(pageable);
     }
 
-    @Operation(summary = "Add a homologacion material record")
+     @Operation(summary = "Add a homologacion material record")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HomologacionMaterialSap add(@RequestBody HomologacionMaterialSap homologacionMaterialSap) {
