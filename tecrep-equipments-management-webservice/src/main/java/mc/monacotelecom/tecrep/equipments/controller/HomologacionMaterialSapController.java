@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
 import mc.monacotelecom.tecrep.equipments.service.HomologacionMaterialSapService;
+import mc.monacotelecom.tecrep.equipments.dto.v2.HomologacionMaterialSapDTOV2;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class HomologacionMaterialSapController {
     @Operation(summary = "Get all homologacion material records")
     @PageableAsQueryParam
     @GetMapping
-    public Page<HomologacionMaterialSap> getAll(@Parameter(hidden = true) Pageable pageable) {
+    public Page<HomologacionMaterialSapDTOV2> getAll(@Parameter(hidden = true) Pageable pageable) {
         return service.getAll(pageable);
     }
 
