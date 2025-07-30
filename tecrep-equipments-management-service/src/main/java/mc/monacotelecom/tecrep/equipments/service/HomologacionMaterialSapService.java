@@ -29,6 +29,7 @@ public class HomologacionMaterialSapService {
         dto.setIdMaterialSap(entity.getIdMaterialSap());
         dto.setNameSap(entity.getNameSap());
         dto.setEquipmentModelId(entity.getEquipmentModelId());
+        dto.setStatus(entity.getStatus());
         if (entity.getEquipmentModelId() != null) {
             equipmentModelRepository.findById(entity.getEquipmentModelId())
                     .ifPresent(model -> {
