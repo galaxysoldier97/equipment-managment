@@ -26,4 +26,7 @@ public class HomologacionMaterialSap implements Serializable {
 
     @Column(name = "equipment_model_id")
     private Long equipmentModelId;
+
+    @Column(name = "status")
+    private String status;
 }

@@ -1,5 +1,8 @@
 # tecrep-equipments-management changelog
 
+## 2.34.0
+* Added status column to homologacion_material_sap table and updated related endpoints
+
 ## 2.33.0
 * Added endpoint to list all records from homologacion_material_sap table
 
