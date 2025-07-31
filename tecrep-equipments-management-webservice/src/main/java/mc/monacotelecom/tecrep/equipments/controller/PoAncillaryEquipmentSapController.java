@@ -3,7 +3,7 @@ package mc.monacotelecom.tecrep.equipments.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import mc.monacotelecom.tecrep.equipments.entity.PoAncillaryEquipmentSap;
+import mc.monacotelecom.tecrep.equipments.dto.v2.PoAncillaryEquipmentSapDTOV2;
 import mc.monacotelecom.tecrep.equipments.service.PoAncillaryEquipmentSapService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class PoAncillaryEquipmentSapController {
 
     @Operation(summary = "Get all PO records")
     @GetMapping
-    public List<PoAncillaryEquipmentSap> getAll() {
+    public List<PoAncillaryEquipmentSapDTOV2> getAll() {
         return service.getAll();
     }
 }
