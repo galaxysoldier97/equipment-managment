@@ -61,5 +61,11 @@ public class EquipmentTemp implements Serializable {
 
     @Column(name = "process_date")
     private LocalDateTime processDate;
+
+    // Explicit setter to avoid compilation issues when Lombok processing is
+    // not available in some build environments
+    public void setPoAncillaryeqmSapId(Long poAncillaryeqmSapId) {
+        this.poAncillaryeqmSapId = poAncillaryeqmSapId;
+    }
     
 }
