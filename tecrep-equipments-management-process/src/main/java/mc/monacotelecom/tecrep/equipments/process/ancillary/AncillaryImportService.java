@@ -29,6 +29,10 @@ import mc.monacotelecom.tecrep.equipments.enums.Status;
 import mc.monacotelecom.tecrep.equipments.repository.AncillaryImportJobRepository;
 import mc.monacotelecom.tecrep.equipments.repository.PoAncillaryEquipmentSapRepository;
 import mc.monacotelecom.tecrep.equipments.entity.PoAncillaryEquipmentSap;
+import mc.monacotelecom.tecrep.equipments.repository.EquipmentTempRepository;
+import mc.monacotelecom.tecrep.equipments.repository.HomologacionMaterialSapRepository;
+import mc.monacotelecom.tecrep.equipments.entity.EquipmentTemp;
+import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.Files;
@@ -65,6 +69,8 @@ public class AncillaryImportService {
 
     private final AncillaryImportJobRepository jobRepository;
     private final PoAncillaryEquipmentSapRepository poAncillaryEquipmentSapRepository;
+    private final EquipmentTempRepository equipmentTempRepository;
+    private final HomologacionMaterialSapRepository homologacionMaterialSapRepository;
 
      
 
@@ -687,7 +693,62 @@ public void executeImportJob(Long jobId) {
         poEntity.setPoNo(poNoValue);
         poEntity.setModel(modelValue);
         poEntity.setStatus("init");
-        poAncillaryEquipmentSapRepository.save(poEntity);
+        poEntity = poAncillaryEquipmentSapRepository.save(poEntity);
+
+        Long poId = poEntity.getId();
+
+        // 4.1 Insertar registros en equipments_temp
+        try (
+                Reader reader2 = new BufferedReader(new InputStreamReader(file.getInputStream()));
+                CSVParser parser2 = new CSVParser(reader2, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
+        ) {
+            for (CSVRecord record : parser2) {
+                String boxSn = record.get("BOX_SN").trim();
+                String nodeModel = record.get("NODE_MODEL").trim();
+
+                if (boxSn.isEmpty() || nodeModel.isEmpty()) {
+                    job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+                    job.setFinishedAt(LocalDateTime.now());
+                    jobRepository.save(job);
+                    throw new EqmValidationException(
+                        localizedMessageBuilder,
+                        "IMPORT_MISSING_FIELDS",
+                        "BOX_SN o NODE_MODEL vacío en línea " + record.getRecordNumber()
+                    );
+                }
+
+                Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
+                if (homOpt.isEmpty()) {
+                    job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+                    job.setFinishedAt(LocalDateTime.now());
+                    jobRepository.save(job);
+                    throw new EqmValidationException(
+                        localizedMessageBuilder,
+                        "IMPORT_MODEL_NOT_FOUND",
+                        "Modelo " + nodeModel + " no encontrado en homologacion_material_sap"
+                    );
+                }
+                HomologacionMaterialSap homologacion = homOpt.get();
+                if (!"Habilitado".equalsIgnoreCase(homologacion.getStatus())) {
+                    job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+                    job.setFinishedAt(LocalDateTime.now());
+                    jobRepository.save(job);
+                    throw new EqmValidationException(
+                        localizedMessageBuilder,
+                        "IMPORT_MODEL_NOT_ENABLED",
+                        "Modelo " + nodeModel + " no está Habilitado"
+                    );
+                }
+
+                EquipmentTemp temp = new EquipmentTemp();
+                temp.setBoxSn(boxSn);
+                temp.setModelId(homologacion.getId());
+                temp.setPoAncillaryeqmSapId(poId);
+                temp.setStatus("temporal");
+                temp.setCreatedAt(LocalDateTime.now());
+                equipmentTempRepository.save(temp);
+            }
+        }
 
         // 5. Guardar archivo en disco
         String inputDir = resultBasePath + "/inputs";
