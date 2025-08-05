@@ -78,7 +78,7 @@ public class EquipmentModelControllerV2 {
         equipmentModelService.delete(id);
     }
 
-    @Operation(summary = "Get access types for a category")
+       @Operation(summary = "Get access types for a category")
     @ApiResponse(responseCode = "200", description = "Access types retrieved")
     @GetMapping("/access-types")
     public List<AccessType> getAccessTypes(@RequestParam EquipmentModelCategory category) {

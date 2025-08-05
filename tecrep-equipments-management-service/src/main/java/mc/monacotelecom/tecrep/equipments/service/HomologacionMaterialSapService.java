@@ -19,7 +19,7 @@ public class HomologacionMaterialSapService {
     private final EquipmentModelRepository equipmentModelRepository;
 
     @Transactional(readOnly = true)
-    public Page<HomologacionMaterialSapDTOV2> getAll(Pageable pageable) {
+   public Page<HomologacionMaterialSapDTOV2> getAll(Pageable pageable) {
         return repository.findAll(pageable).map(this::mapToDto);
     }
 

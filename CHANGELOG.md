@@ -1,25 +1,12 @@
 # tecrep-equipments-management changelog
 
-## 2.34.0
-* Added status column to homologacion_material_sap table and updated related endpoints
-
-## 2.33.0
-* Added endpoint to list all records from homologacion_material_sap table
-
-## 2.32.0
-* Added endpoint to list all records from po_ancillary_equipment_sap table
-
-## 2.31.0
-* Added model column to po_ancillary_equipment_sap table
-
 ## 2.30.0
 * Added po_ancillary_equipment_sap and homologacion_material_sap tables
 * Updated equipments_temp table with po_ancillaryeqm_sap_id column
-* Added entities and repositories for the new tables
-* Updated EquipmentTemp entity to use the new column name
 
 ## 2.29.0
 * Added status and order_upload_id columns to equipments_temp table
+* Added equipments_config table
 
 ## 2.28.0
 * Created equipments_temp table

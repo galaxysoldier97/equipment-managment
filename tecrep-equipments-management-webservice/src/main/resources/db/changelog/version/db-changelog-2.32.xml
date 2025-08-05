@@ -4,6 +4,47 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
+    <changeSet author="tecrep" id="add-messages-column-equipmentstemp">
+        <addColumn tableName="equipments_temp">
+            <column name="messages" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="tecrep" id="create-equipment-model-mask-config">
+        <createTable tableName="equipment_model_mask_config">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="model_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mask_format" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="ENUM('enable','disable')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="tecrep" id="create-equipments-config">
+        <createTable tableName="equipments_config">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="status" type="ENUM('enable','disable')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet author="tecrep" id="add-status-column-homologacion-material-sap">
         <addColumn tableName="homologacion_material_sap">
             <column name="status" type="VARCHAR(50)"/>
