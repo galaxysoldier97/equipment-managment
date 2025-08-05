@@ -687,6 +687,7 @@ public void executeImportJob(Long jobId) {
             if (material != null && !material.isBlank()) {
                 String cleanedMaterial = material.trim().replaceFirst("^0+(?!$)", "");
                 itemToModel.put(itemNo, cleanedMaterial);
+
             }
         }
         if (itemToModel.isEmpty()) {
@@ -711,6 +712,7 @@ public void executeImportJob(Long jobId) {
             Element snEl = (Element) serialNodes.item(i);
             String serial = getText(snEl, "SERIALNO");
             String matdoc = getText(snEl, "MATDOC_ITM");
+    
             String nodeModel;
             if (matdoc == null || matdoc.isBlank()) {
                 nodeModel = modelValue;
@@ -729,6 +731,7 @@ public void executeImportJob(Long jobId) {
             if (equipmentTempRepository.existsByBoxSn(serial)) {
                 continue;
             }
+
 
             Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
             if (homOpt.isEmpty()) {
