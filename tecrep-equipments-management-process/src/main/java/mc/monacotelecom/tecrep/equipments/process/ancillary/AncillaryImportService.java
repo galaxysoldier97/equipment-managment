@@ -19,6 +19,14 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -630,13 +638,20 @@ public void executeImportJob(Long jobId) {
         return Optional.empty();
     }
 
+    String originalFilename = Optional.ofNullable(file.getOriginalFilename()).orElse("");
+    if (!originalFilename.matches("^[^.]+\\.xml$")) {
+        throw new EqmValidationException(localizedMessageBuilder, "IMPORT_INVALID_EXTENSION", "El archivo debe ser un XML");
+    }
+
     AncillaryImportJob job = new AncillaryImportJob();
-    try (
-        Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-        CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
-    ) {
-        // 1. Crear el job con estado PENDING desde el inicio
-        job.setOriginalFilename(file.getOriginalFilename());
+    try {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(file.getInputStream());
+        doc.getDocumentElement().normalize();
+
+        job.setOriginalFilename(originalFilename);
         job.setFormat(format);
         job.setContinueOnError(continueOnError);
         job.setStatus(AncillaryImportJob.JobStatus.PENDING);
@@ -646,115 +661,98 @@ public void executeImportJob(Long jobId) {
         job.setErrorCount(0);
         job = jobRepository.save(job);
 
-        // 2. Validar cabeceras
-        Map<String, Integer> headers = parser.getHeaderMap();
-        if (!headers.containsKey("PO_NO") || !headers.containsKey("BOX_SN") || !headers.containsKey("NODE_MODEL")) {
-            failJobAndThrow(job, "IMPORT_HEADER_MISSING", "Faltan columnas obligatorias: PO_NO, BOX_SN, NODE_MODEL");
+        // 1. Validar y obtener PO_NUMBER (todos deben ser iguales)
+        NodeList poNodes = doc.getElementsByTagName("PO_NUMBER");
+        if (poNodes.getLength() == 0) {
+            failJobAndThrow(job, "IMPORT_PO_NO_MISSING", "Falta el nodo PO_NUMBER en el XML");
         }
-
-        // 3. Validar que todos los PO_NO sean iguales
-        Set<String> poNos = new HashSet<>();
-        Set<String> nodeModels = new HashSet<>();
-        for (CSVRecord record : parser) {
-            String po = record.get("PO_NO").trim();
-            String model = record.get("NODE_MODEL").trim();
-
-            if (!po.isEmpty()) poNos.add(po);
-            if (!model.isEmpty()) nodeModels.add(model);
+        String poNoValue = poNodes.item(0).getTextContent().trim();
+        for (int i = 1; i < poNodes.getLength(); i++) {
+            String po = poNodes.item(i).getTextContent().trim();
+            if (!poNoValue.equals(po)) {
+                failJobAndThrow(job, "IMPORT_DIFFERENT_PO_NO", "Todos los registros deben tener el mismo PO_NUMBER");
+            }
         }
-
-        if (poNos.size() != 1 || nodeModels.size() != 1) {
-            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
-            job.setFinishedAt(LocalDateTime.now());
-            jobRepository.save(job);
-            throw new EqmValidationException(localizedMessageBuilder,
-             IMPORT_DIFFERENT_PO_NO,
-             "Todos los registros deben tener el mismo PO_NO y/o NODE_MODEL");
-        }
-
-        //Antes de Guardar en la tabla maestra, validar si el PO_NO ya existe,
-        // 3.1) Validar si el PO_NO ya existe en la tabla maestra
-        String poNoValue = poNos.iterator().next();
-        String modelValue = nodeModels.iterator().next();
-       if (poAncillaryEquipmentSapRepository.existsByPoNo(poNoValue)) {
+        if (poAncillaryEquipmentSapRepository.existsByPoNo(poNoValue)) {
             failJobAndThrow(job, "IMPORT_PO_NO_EXISTS", "El PO_NO ya existe en la tabla maestra");
         }
-    
-        // 4. Guardar PO en tabla maestra
+
+        // 2. Mapear MATERIAL por MATDOC_ITM (puede haber varios modelos)
+        Map<String, String> itemToModel = new HashMap<>();
+        NodeList itemNodes = doc.getElementsByTagName("E1BP2017_GM_ITEM_CREATE");
+        for (int i = 0; i < itemNodes.getLength(); i++) {
+            Element itemEl = (Element) itemNodes.item(i);
+            String material = getText(itemEl, "MATERIAL");
+            String itemNo = String.format("%04d", i + 1);
+            if (material != null && !material.isBlank()) {
+                itemToModel.put(itemNo, material.trim());
+            }
+        }
+        if (itemToModel.isEmpty()) {
+            failJobAndThrow(job, "IMPORT_MODEL_MISSING", "No se encontró ningún MATERIAL en el XML");
+        }
+
+        // 3. Guardar PO en tabla maestra utilizando el primer modelo disponible
+        String modelValue = itemToModel.values().iterator().next();
         PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
         poEntity.setPoNo(poNoValue);
         poEntity.setModel(modelValue);
         poEntity.setStatus("init");
-         poEntity = poAncillaryEquipmentSapRepository.save(poEntity);
-
+        poEntity = poAncillaryEquipmentSapRepository.save(poEntity);
         Long poId = poEntity.getId();
+
+        // 4. Insertar registros en equipments_temp
+        NodeList serialNodes = doc.getElementsByTagName("E1BP2017_GM_SERIALNUMBER");
         int insertedCount = 0;
         int totalRecords = 0;
-        // 4.1 Insertar registros en equipments_temp
-        try (
-                Reader reader2 = new BufferedReader(new InputStreamReader(file.getInputStream()));
-                CSVParser parser2 = new CSVParser(reader2, CSVFormat.DEFAULT.withFirstRecordAsHeader().withTrim())
-        ) {
-            for (CSVRecord record : parser2) {
-                totalRecords++;
-                String boxSn = record.get("BOX_SN").trim();
-                String nodeModel = record.get("NODE_MODEL").trim();
-                
+        for (int i = 0; i < serialNodes.getLength(); i++) {
+            totalRecords++;
+            Element snEl = (Element) serialNodes.item(i);
+            String serial = getText(snEl, "SERIALNO");
+            String matdoc = getText(snEl, "MATDOC_ITM");
+            String nodeModel = itemToModel.getOrDefault(matdoc, modelValue);
 
-                if (boxSn.isEmpty() || nodeModel.isEmpty()) {
-                    failJobAndThrow(job, "IMPORT_MISSING_BOX_OR_MODEL",
-                    String.format("Faltan datos obligatorios: BOX_SN='%s', NODE_MODEL='%s'", boxSn, nodeModel));
-                    }
-
-                // Validación de duplicado
-                if (equipmentTempRepository.existsByBoxSn(boxSn)) {
-                    continue;
-                }
-
-                Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
-                if (homOpt.isEmpty()) {
-                    failJobAndThrow(job, "IMPORT_MODEL_NOT_FOUND",
-                    String.format("Modelo no homologado: NODE_MODEL='%s' no encontrado en homologacion_material_sap", nodeModel));
-                }
-                HomologacionMaterialSap homologacion = homOpt.get();
-                if (!"Habilitado".equalsIgnoreCase(homologacion.getStatus())) {
-                     failJobAndThrow(job, "IMPORT_MODEL_DISABLED",
-                    String.format("Modelo no homologado: NODE_MODEL='%s' no está Habilitado", nodeModel));
-                }
-
-                EquipmentTemp temp = new EquipmentTemp();
-                temp.setBoxSn(boxSn);
-                temp.setModelId(homologacion.getEquipmentModelId());
-                temp.setPoAncillaryeqmSapId(poId);
-                temp.setStatus("temporal");
-                temp.setCreatedAt(LocalDateTime.now());
-                equipmentTempRepository.save(temp);
-                insertedCount++;
+            if (serial == null || serial.isBlank() || nodeModel == null || nodeModel.isBlank()) {
+                failJobAndThrow(job, "IMPORT_MISSING_BOX_OR_MODEL",
+                        String.format("Faltan datos obligatorios: BOX_SN='%s', NODE_MODEL='%s'", serial, nodeModel));
             }
+
+            if (equipmentTempRepository.existsByBoxSn(serial)) {
+                continue;
+            }
+
+            Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
+            if (homOpt.isEmpty()) {
+                failJobAndThrow(job, "IMPORT_MODEL_NOT_FOUND",
+                        String.format("Modelo no homologado: NODE_MODEL='%s' no encontrado en homologacion_material_sap", nodeModel));
+            }
+            HomologacionMaterialSap homologacion = homOpt.get();
+            if (!"Habilitado".equalsIgnoreCase(homologacion.getStatus())) {
+                failJobAndThrow(job, "IMPORT_MODEL_DISABLED",
+                        String.format("Modelo no homologado: NODE_MODEL='%s' no está Habilitado", nodeModel));
+            }
+
+            EquipmentTemp temp = new EquipmentTemp();
+            temp.setBoxSn(serial.trim());
+            temp.setModelId(homologacion.getEquipmentModelId());
+            temp.setPoAncillaryeqmSapId(poId);
+            temp.setStatus("temporal");
+            temp.setCreatedAt(LocalDateTime.now());
+            equipmentTempRepository.save(temp);
+            insertedCount++;
         }
 
-        //Vamos a a mandar un mensjae de error si no se insertó ningún registro.
         if (insertedCount == 0) {
-            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
-            job.setFinishedAt(LocalDateTime.now());
-            jobRepository.save(job);
-            throw new EqmValidationException(
-                localizedMessageBuilder,
-                "IMPORT_NO_INSERTS",
-                "No se pudo insertar ningún registro. Todos fueron omitidos por duplicados o datos inválidos."
-            );
+            failJobAndThrow(job, "IMPORT_NO_INSERTS", "No se pudo insertar ningún registro. Todos fueron omitidos por duplicados o datos inválidos.");
         }
 
-        // 5. Guardar archivo en disco
         String inputDir = resultBasePath + "/inputs";
         Files.createDirectories(Path.of(inputDir));
-        String savedName = "job-" + job.getId() + "_" + file.getOriginalFilename();
+        String savedName = "job-" + job.getId() + "_" + originalFilename;
         Path destination = Path.of(inputDir, savedName);
         file.transferTo(destination.toFile());
-
         job.setInputFilePath(destination.toString());
 
-        //Vamos a validar si hubo alguno que no se inserto.
         if (insertedCount < totalRecords) {
             job.setStatus(AncillaryImportJob.JobStatus.SUCCESS_WITH_ERRORS);
         } else {
@@ -762,12 +760,11 @@ public void executeImportJob(Long jobId) {
         }
         job.setFinishedAt(LocalDateTime.now());
         jobRepository.save(job);
-       
 
         log.info("SAP_ANCILLARY_TEMP: PO {} registrado, archivo guardado, Job #{} SUCCESS", poNoValue, job.getId());
         return Optional.of(job.getId());
 
-    } catch (IOException e) {
+    } catch (IOException | ParserConfigurationException | SAXException e) {
         job.setStatus(AncillaryImportJob.JobStatus.FAILED);
         job.setFinishedAt(LocalDateTime.now());
         jobRepository.save(job);
@@ -781,6 +778,14 @@ public void executeImportJob(Long jobId) {
         throw ve;
     }
 }
+
+    private String getText(Element parent, String tag) {
+        NodeList list = parent.getElementsByTagName(tag);
+        if (list.getLength() == 0) {
+            return null;
+        }
+        return list.item(0).getTextContent();
+    }
 
 private void failJobAndThrow(AncillaryImportJob job, String errorCode, String message) {
     job.setStatus(AncillaryImportJob.JobStatus.FAILED);
