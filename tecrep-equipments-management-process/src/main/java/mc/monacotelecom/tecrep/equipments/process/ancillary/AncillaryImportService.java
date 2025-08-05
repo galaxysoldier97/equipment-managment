@@ -685,7 +685,9 @@ public void executeImportJob(Long jobId) {
             String material = getText(itemEl, "MATERIAL");
             String itemNo = String.format("%04d", i + 1);
             if (material != null && !material.isBlank()) {
-                itemToModel.put(itemNo, material.trim());
+                String cleanedMaterial = material.trim().replaceFirst("^0+(?!$)", "");
+                itemToModel.put(itemNo, cleanedMaterial);
+
             }
         }
         if (itemToModel.isEmpty()) {
@@ -710,7 +712,16 @@ public void executeImportJob(Long jobId) {
             Element snEl = (Element) serialNodes.item(i);
             String serial = getText(snEl, "SERIALNO");
             String matdoc = getText(snEl, "MATDOC_ITM");
-            String nodeModel = itemToModel.getOrDefault(matdoc, modelValue);
+    
+            String nodeModel;
+            if (matdoc == null || matdoc.isBlank()) {
+                nodeModel = modelValue;
+            } else {
+                nodeModel = itemToModel.get(matdoc);
+                if (nodeModel == null) {
+                    failJobAndThrow(job, "IMPORT_INVALID_MATDOC", String.format("MATDOC_ITM='%s' no corresponde a ningún MATERIAL", matdoc));
+                }
+            }
 
             if (serial == null || serial.isBlank() || nodeModel == null || nodeModel.isBlank()) {
                 failJobAndThrow(job, "IMPORT_MISSING_BOX_OR_MODEL",
@@ -720,6 +731,7 @@ public void executeImportJob(Long jobId) {
             if (equipmentTempRepository.existsByBoxSn(serial)) {
                 continue;
             }
+
 
             Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
             if (homOpt.isEmpty()) {
