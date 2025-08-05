@@ -210,8 +210,7 @@ class EquipmentModelIntegrationV2Test extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.errorCode").value("Conflict"))
                 .andExpect(jsonPath("$.errorMessage").value("An equipment model with name 'name-1' and category 'CPE' already exists"));
     }
-
-    @Test
+      @Test
     void getNames_success() throws Exception {
         mockMvc.perform(get(baseUrl + "/names")
                         .param("category", "CPE")

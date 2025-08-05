@@ -150,5 +150,6 @@ public final class TranslationMessages {
     public static final String EQUIPMENT_TEMP_PENDING_EMAIL_NOT_FOUND = "equipment.temp.pending.email.not.found";
     public static final String EQUIPMENT_TEMP_COMPLETED_EMAIL_NOT_FOUND = "equipment.temp.completed.email.not.found";
     public static final String WRONG_EQUIPMENT_STATUS = "wrong.equipment.status";
+    public static final String IMPORT_DIFFERENT_PO_NO = "import.different.po.number";
     public static final String EXPORTER_REQUIRED_SEARCH_PARAM = "inventory.exporter.search.mandatory";
 }

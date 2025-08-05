@@ -10174,15 +10174,20 @@ paths:
           in: formData
           required: true
           type: file
-        - name: model_id
+        - name: po_ancillaryeqm_sap_id
           in: query
           required: false
           type: integer
-          format: int32
+          format: int64
         - name: email
           in: query
           required: false
           type: string
+        - name: model_id
+          in: query
+          required: false
+          type: integer
+          format: int64
       responses:
         '201':
           description: Created
@@ -13687,6 +13692,10 @@ definitions:
       orderUploadId:
         type: integer
         format: int64
+      notFoundBoxSns:
+        type: array
+        items:
+          type: string
     title: UploadEquipmentTempResponseDTO
   WarehouseDTO:
     type: object

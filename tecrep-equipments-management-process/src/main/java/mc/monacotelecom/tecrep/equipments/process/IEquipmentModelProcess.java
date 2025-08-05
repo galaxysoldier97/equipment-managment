@@ -82,7 +82,6 @@ public interface IEquipmentModelProcess {
     Page<EquipmentModelDTO> getAllV1(Pageable pageable);
 
     Page<EquipmentModelDTOV2> search(SearchEquipmentModelDTO dto, Pageable pageable);
-
     /**
      * Get the list of access types for a specific category
      *

@@ -30,11 +30,11 @@ public class EquipmentTempController {
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public UploadEquipmentTempResponseDTO upload(@RequestPart("file") MultipartFile file,
-                       @RequestParam("model_id") Long modelId,
+                       @RequestParam("po_ancillaryeqm_sap_id") Long poAncillaryeqmSapId,
                        @RequestParam("email") String email,
+                       @RequestParam(value = "model_id", required = false) Long modelId,
                        HttpSession httpSession) {
-        Long orderUploadId = equipmentTempService.upload(file, modelId, email, httpSession.getId());
-        return new UploadEquipmentTempResponseDTO(orderUploadId);
+        return equipmentTempService.upload(file, poAncillaryeqmSapId, email, modelId, httpSession.getId());
     }
 
 

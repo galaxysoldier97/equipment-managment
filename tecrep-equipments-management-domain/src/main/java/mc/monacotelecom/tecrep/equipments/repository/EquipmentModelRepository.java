@@ -21,11 +21,7 @@ public interface EquipmentModelRepository extends JpaRepository<EquipmentModel, 
     @Query("SELECT DISTINCT e.accessType FROM EquipmentModel e WHERE e.category = :category")
     List<AccessType> findDistinctAccessTypesByCategory(@Param("category") EquipmentModelCategory category);
 
-    @Query("SELECT e.name FROM EquipmentModel e WHERE e.category = :category AND e.accessType = :accessType")
-    List<String> findNamesByCategoryAndAccessType(@Param("category") EquipmentModelCategory category,
-                                                  @Param("accessType") AccessType accessType);
-
-    @Query("SELECT e.id AS id, e.name AS name FROM EquipmentModel e WHERE e.category = :category AND e.accessType = :accessType ORDER BY e.id")
+      @Query("SELECT e.id AS id, e.name AS name FROM EquipmentModel e WHERE e.category = :category AND e.accessType = :accessType ORDER BY e.id")
     List<EquipmentModelNameProjection> findIdAndNameByCategoryAndAccessType(@Param("category") EquipmentModelCategory category,
                                                                             @Param("accessType") AccessType accessType);
 }

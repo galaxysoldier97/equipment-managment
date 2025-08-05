@@ -23,12 +23,12 @@ public class HomologacionMaterialSapDTOV2 {
     @Schema(description = "Related equipment model ID")
     private Long equipmentModelId;
 
-    @Schema(description = "Status of the material")
-    private String status;
-
     @Schema(description = "Related equipment model name")
     private String equipmentModelName;
 
     @Schema(description = "Access type of the equipment model")
     private AccessType accessType;
+
+    @Schema(description = "Status of the material")
+    private String status;
 }

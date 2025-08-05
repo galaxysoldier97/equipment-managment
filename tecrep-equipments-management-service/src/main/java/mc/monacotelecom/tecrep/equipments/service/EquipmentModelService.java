@@ -66,7 +66,7 @@ public class EquipmentModelService {
         return equipmentModelProcess.search(dto, pageable);
     }
 
-    @Transactional(readOnly = true)
+     @Transactional(readOnly = true)
     public List<AccessType> getAccessTypesByCategory(final EquipmentModelCategory category) {
         return equipmentModelProcess.getAccessTypesByCategory(category);
     }

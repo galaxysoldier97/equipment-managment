@@ -20,7 +20,7 @@ public class EquipmentTemp implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "po_ancillaryeqm_sap_id", nullable = false)
+    @Column(name = "po_ancillaryeqm_sap_id")
     private Long poAncillaryeqmSapId;
 
     @Column(name = "part_no")
@@ -51,7 +51,10 @@ public class EquipmentTemp implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name = "status")
-    private String status;
+    private String status = "temporal";
+
+    @Column(name = "messages")
+    private String messages;
 
     @Column(name = "order_upload_id")
     private Long orderUploadId;
@@ -62,10 +65,7 @@ public class EquipmentTemp implements Serializable {
     @Column(name = "process_date")
     private LocalDateTime processDate;
 
-    // Explicit setter to avoid compilation issues when Lombok processing is
-    // not available in some build environments
-    public void setPoAncillaryeqmSapId(Long poAncillaryeqmSapId) {
-        this.poAncillaryeqmSapId = poAncillaryeqmSapId;
-    }
+    @Transient
+    private String poNo;
     
 }

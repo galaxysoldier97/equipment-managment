@@ -7,6 +7,8 @@ import mc.monacotelecom.tecrep.equipments.entity.EquipmentTemp;
 import mc.monacotelecom.tecrep.equipments.exceptions.EqmInternalException;
 import mc.monacotelecom.tecrep.equipments.exceptions.EqmNotFoundException;
 import mc.monacotelecom.tecrep.equipments.repository.EquipmentTempRepository;
+import mc.monacotelecom.tecrep.equipments.repository.PoAncillaryEquipmentSapRepository;
+import mc.monacotelecom.tecrep.equipments.dto.UploadEquipmentTempResponseDTO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -36,14 +38,29 @@ import static mc.monacotelecom.tecrep.equipments.translation.TranslationMessages
 public class EquipmentTempProcess {
 
     private final EquipmentTempRepository equipmentTempRepository;
+    private final PoAncillaryEquipmentSapRepository poAncillaryEquipmentSapRepository;
     private final LocalizedMessageBuilder localizedMessageBuilder;
 
     @Transactional
-    public Long importFile(MultipartFile file, Long modelId, String email, String sessionId) {
+    public UploadEquipmentTempResponseDTO importFile(MultipartFile file, Long poAncillaryeqmSapId, String email, Long modelId, String sessionId) {
+        
+        // Validate that the PO exists before processing the file
+        /* equipmentTempRepository.findByPoAncillaryeqmSapId(poAncillaryeqmSapId)
+                .orElseThrow(() -> new EqmNotFoundException(localizedMessageBuilder,
+                        EQUIPMENT_TEMP_PO_NOT_FOUND, poAncillaryeqmSapId)); */
+
+        if (!poAncillaryEquipmentSapRepository.existsById(poAncillaryeqmSapId)) {
+            throw new EqmNotFoundException(localizedMessageBuilder,
+                    EQUIPMENT_TEMP_PO_NOT_FOUND, poAncillaryeqmSapId);
+        }
+
         Long orderUploadId = Optional.ofNullable(
                 equipmentTempRepository.findFirstByOrderByOrderUploadIdDesc())
                 .map(EquipmentTemp::getOrderUploadId)
                 .orElse(0L) + 1;
+
+        List<String> notFoundBoxSns = new java.util.ArrayList<>();
+
         try (Reader reader = new InputStreamReader(
                 new BOMInputStream(file.getInputStream()), StandardCharsets.UTF_8)) {
             CSVParser parser = CSVFormat.DEFAULT
@@ -51,25 +68,55 @@ public class EquipmentTempProcess {
                     .withIgnoreHeaderCase()
                     .withTrim()
                     .parse(reader);
+
             for (CSVRecord record : parser) {
-                EquipmentTemp temp = new EquipmentTemp();
-                temp.setPoAncillaryeqmSapId(Long.valueOf(record.get("po_ancillaryeqm_sap_id")));
-                temp.setPartNo(record.get("part_no"));
-                temp.setBoxSn(record.get("box_sn"));
-                temp.setPodSn(record.get("pod_sn"));
-                temp.setModelId(modelId);
-                temp.setUploadedBy(email);
-                temp.setSessionId(sessionId);
-                temp.setOrderUploadId(orderUploadId);
-                temp.setCreatedAt(LocalDateTime.now());
-                temp.setStatus("pending");
-                equipmentTempRepository.save(temp);
+                String boxSn = record.get("box_sn");
+                String podSn = record.get("pod_sn");
+                String partNo = record.get("part_no");
+
+                int updated = equipmentTempRepository.updateCsvValues(
+                        podSn,
+                        partNo,
+                        "pending",
+                        email,
+                        sessionId,
+                        orderUploadId,
+                        LocalDateTime.now(),
+                        poAncillaryeqmSapId,
+                        boxSn);
+                
+
+                if (updated == 0) {
+                    EquipmentTemp newEq = new EquipmentTemp();
+                    newEq.setPoAncillaryeqmSapId(poAncillaryeqmSapId);
+                    newEq.setModelId(modelId);
+                    newEq.setPartNo(partNo);
+                    newEq.setBoxSn(boxSn);
+                    newEq.setPodSn(podSn);
+                    newEq.setUploadedBy(email);
+                    newEq.setSessionId(sessionId);
+                    newEq.setOrderUploadId(orderUploadId);
+                    newEq.setCreatedAt(LocalDateTime.now());
+                    newEq.setStatus("error_not_found");
+                    String poNo = poAncillaryEquipmentSapRepository.findById(poAncillaryeqmSapId)
+                            .map(p -> p.getPoNo())
+                            .orElse("");
+                    newEq.setMessages("El serial: " + boxSn + " no fue encontrado para esta orden de compra: " + poNo);
+                    equipmentTempRepository.save(newEq);
+                    notFoundBoxSns.add(boxSn);
+                }
+
             }
+
+        } catch (EqmNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Failed to import equipments temp file", e);
             throw new EqmInternalException(e, localizedMessageBuilder, BATCH_UPLOAD_IMPORT_FAILURE);
         }
-        return orderUploadId;
+
+        return new UploadEquipmentTempResponseDTO(orderUploadId, notFoundBoxSns);
+
     }
 
     public EquipmentTemp getByBoxSn(String boxSn) {
@@ -106,10 +153,20 @@ public class EquipmentTempProcess {
     @Transactional(readOnly = true)
     public List<EquipmentTemp> getPendingByEmail(String email) {
         List<EquipmentTemp> equipments = equipmentTempRepository
-                .findAllByStatusAndUploadedBy("pending", email);
+                .findAllByStatusInAndUploadedBy(java.util.Arrays.asList("pending", "error_not_found"), email);
         if (equipments.isEmpty()) {
             throw new EqmNotFoundException(localizedMessageBuilder, EQUIPMENT_TEMP_PENDING_EMAIL_NOT_FOUND, email);
         }
+
+        // Purchase order number for each equipment
+        equipments.forEach(eq -> {
+            String poNo = poAncillaryEquipmentSapRepository
+                    .findById(eq.getPoAncillaryeqmSapId())
+                    .map(p -> p.getPoNo())
+                    .orElse(null);
+            eq.setPoNo(poNo);
+        });
+
         return equipments;
     }
 
@@ -137,4 +194,20 @@ public class EquipmentTempProcess {
     public void updateValidEquipmentsInfo(List<Long> ids, Long jobId, LocalDateTime processDate) {
         equipmentTempRepository.updateValidEquipmentsInfo(jobId, processDate, ids);
     }
+
+    @Transactional(readOnly = true)
+    public List<EquipmentTemp> getCompletedByJobId(Long jobId) {
+        return equipmentTempRepository.findAllByStatusAndJobId("completed", jobId);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<EquipmentTemp> findFirstByJobId(Long jobId) {
+        return equipmentTempRepository.findFirstByJobId(jobId);
+    }
+
+    @Transactional
+    public void updatePoStatus(Long poId, String status) {
+        poAncillaryEquipmentSapRepository.updateStatusById(poId, status);
+    }
+    
 }
