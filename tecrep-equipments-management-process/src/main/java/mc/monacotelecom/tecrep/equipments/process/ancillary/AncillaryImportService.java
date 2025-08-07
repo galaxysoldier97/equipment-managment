@@ -41,6 +41,9 @@ import mc.monacotelecom.tecrep.equipments.repository.EquipmentTempRepository;
 import mc.monacotelecom.tecrep.equipments.repository.HomologacionMaterialSapRepository;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentTemp;
 import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
+import mc.monacotelecom.tecrep.equipments.process.util.PgpDecryptor;
+import org.bouncycastle.openpgp.PGPException;
+import org.springframework.core.io.ClassPathResource;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.Files;
@@ -79,6 +82,9 @@ public class AncillaryImportService {
     private final PoAncillaryEquipmentSapRepository poAncillaryEquipmentSapRepository;
     private final EquipmentTempRepository equipmentTempRepository;
     private final HomologacionMaterialSapRepository homologacionMaterialSapRepository;
+
+    private static final String SAP_SECRET_KEY_PATH = "keys/milicom_dev_secretkey.asc";
+    private static final String SAP_PASSPHRASE = "Milicom2020";
 
      
 
@@ -633,7 +639,7 @@ public void executeImportJob(Long jobId) {
      * Si el formato es SAP_ANCILLARY_TEMP y las cabeceras requeridas existen,
      * procesa el archivo y guarda los datos en la tabla maestra y temporal.
      */
-        private Optional<Long> handleSapAncillaryTempFormat(MultipartFile file, String format, boolean continueOnError) {
+    private Optional<Long> handleSapAncillaryTempFormat(MultipartFile file, String format, boolean continueOnError) {
     if (!"SAP_ANCILLARY_TEMP".equalsIgnoreCase(format)) {
         return Optional.empty();
     }
@@ -648,7 +654,7 @@ public void executeImportJob(Long jobId) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(file.getInputStream());
+        Document doc = db.parse(decryptSapAncillaryTemp(file.getInputStream()));
         doc.getDocumentElement().normalize();
 
         job.setOriginalFilename(originalFilename);
@@ -789,7 +795,7 @@ public void executeImportJob(Long jobId) {
         }
         throw ve;
     }
-}
+    }
 
     private String getText(Element parent, String tag) {
         NodeList list = parent.getElementsByTagName(tag);
@@ -797,6 +803,16 @@ public void executeImportJob(Long jobId) {
             return null;
         }
         return list.item(0).getTextContent();
+    }
+
+    private InputStream decryptSapAncillaryTemp(InputStream encrypted) throws IOException {
+        try (InputStream keyIn = new ClassPathResource(SAP_SECRET_KEY_PATH).getInputStream()) {
+            PgpDecryptor decryptor = new PgpDecryptor(keyIn, SAP_PASSPHRASE.toCharArray());
+            byte[] plain = decryptor.decrypt(encrypted);
+            return new ByteArrayInputStream(plain);
+        } catch (PGPException e) {
+            throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
+        }
     }
 
 private void failJobAndThrow(AncillaryImportJob job, String errorCode, String message) {
