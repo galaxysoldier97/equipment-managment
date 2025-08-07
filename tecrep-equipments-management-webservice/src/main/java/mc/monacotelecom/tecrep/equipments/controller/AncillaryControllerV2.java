@@ -156,6 +156,7 @@ public class AncillaryControllerV2 {
     @Operation(summary = "Inicia import Ancillary Equipment (asíncrono)")
     @ApiResponse(responseCode = "202", description = "Import process started, devuelve jobId")
     @ApiResponse(responseCode = "400", description = "Invalid file or format")
+    @ApiResponse(responseCode = "422", description = "Validation failed (unprocessable entity)")
     @ApiResponse(responseCode = "500", description = "Internal error")
     @PostMapping(
         path = "/import",

@@ -63,11 +63,11 @@ public class EqmControllerAdviceV1 {
         return error(NOT_FOUND, e, resolveMessage(e, locale));
     }
 
-    @ResponseStatus(BAD_REQUEST)
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler({EqmValidationException.class, CommonImportValidationException.class, CommonExporterException.class})
-    public CustomErrorResponse handleBadRequestException(Exception e, Locale locale) {
+    public CustomErrorResponse handleUnprocessableEntityException(Exception e, Locale locale) {
         log.debug(EXCEPTION_MESSAGE, e);
-        return error(BAD_REQUEST, e, resolveMessage(e, locale));
+        return error(UNPROCESSABLE_ENTITY, e, resolveMessage(e, locale));
     }
 
     @ResponseStatus(BAD_REQUEST)
@@ -127,7 +127,11 @@ public class EqmControllerAdviceV1 {
             String key = le.getMessageKey();
             Object[] args = le.getArgs();
             log.info("🌍 Traduciendo clave '{}' con args {} y locale {}", key, args, locale);
-            return localizedMessageBuilder.getLocalizedMessage(key, args);
+            String localized = localizedMessageBuilder.getLocalizedMessage(key, args);
+            if ((localized == null || localized.equals(key)) && args != null && args.length > 0 && args[0] != null) {
+                return args[0].toString();
+            }
+            return localized;
         }
         return e.getMessage() != null ? e.getMessage() : "Unknown error";
     }
