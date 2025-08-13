@@ -14,6 +14,8 @@ import mc.monacotelecom.tecrep.equipments.repository.AncillaryImportErrorReposit
 import mc.monacotelecom.tecrep.equipments.repository.EquipmentModelRepository;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentModelCategory;
 import mc.monacotelecom.tecrep.equipments.repository.WarehouseRepository;
+import mc.monacotelecom.tecrep.equipments.util.PgpDecryptUtil;
+import org.bouncycastle.openpgp.PGPException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -41,13 +43,12 @@ import mc.monacotelecom.tecrep.equipments.repository.EquipmentTempRepository;
 import mc.monacotelecom.tecrep.equipments.repository.HomologacionMaterialSapRepository;
 import mc.monacotelecom.tecrep.equipments.entity.EquipmentTemp;
 import mc.monacotelecom.tecrep.equipments.entity.HomologacionMaterialSap;
-import mc.monacotelecom.tecrep.equipments.process.util.PgpDecryptor;
-import org.bouncycastle.openpgp.PGPException;
-import org.springframework.core.io.ClassPathResource;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -57,6 +58,11 @@ import java.util.UUID;
 import mc.monacotelecom.tecrep.equipments.entity.AncillaryImportJob;
 import mc.monacotelecom.tecrep.equipments.factory.AncillaryEquipmentFactory;
 import mc.monacotelecom.tecrep.equipments.enums.EquipmentCategory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.TransactionDefinition;
+
 
 //orElseThrow
 import mc.monacotelecom.tecrep.equipments.exceptions.EqmNotFoundException;
@@ -82,10 +88,13 @@ public class AncillaryImportService {
     private final PoAncillaryEquipmentSapRepository poAncillaryEquipmentSapRepository;
     private final EquipmentTempRepository equipmentTempRepository;
     private final HomologacionMaterialSapRepository homologacionMaterialSapRepository;
+    private final PlatformTransactionManager txManager;
 
-    private static final String SAP_SECRET_KEY_PATH = "keys/milicom_dev_secretkey.asc";
-    private static final String SAP_PASSPHRASE = "Milicom2020";
-
+    private TransactionTemplate newTxTemplate() {
+        TransactionTemplate tt = new TransactionTemplate(txManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return tt;
+    }
      
 
     @Value("${ancillary.import.result-base-path}")
@@ -132,6 +141,7 @@ public class AncillaryImportService {
         // 1.1) Si el importador  viene con el format = SAP_ANCILLARY_TEMP
         Optional<Long> jobIdIfHandled = handleSapAncillaryTempFormat(file, format, continueOnError);
         if (jobIdIfHandled.isPresent()) {
+
             return jobIdIfHandled.get();
         } 
 
@@ -195,6 +205,8 @@ public void executeImportJob(Long jobId) {
         return;
     }
     AncillaryImportJob job = maybe.get();
+
+//trabajar aqui ..
 
     // 1) Marcar como PROCESSING
     job.setStatus(AncillaryImportJob.JobStatus.PROCESSING);
@@ -639,24 +651,17 @@ public void executeImportJob(Long jobId) {
      * Si el formato es SAP_ANCILLARY_TEMP y las cabeceras requeridas existen,
      * procesa el archivo y guarda los datos en la tabla maestra y temporal.
      */
+   
+   // Asincrono
     private Optional<Long> handleSapAncillaryTempFormat(MultipartFile file, String format, boolean continueOnError) {
-    if (!"SAP_ANCILLARY_TEMP".equalsIgnoreCase(format)) {
-        return Optional.empty();
-    }
+        if (!"SAP_ANCILLARY_TEMP".equalsIgnoreCase(format)) {
+            return Optional.empty();
+        }
 
-    String originalFilename = Optional.ofNullable(file.getOriginalFilename()).orElse("");
-    if (!originalFilename.matches("^[^.]+\\.xml$")) {
-        throw new EqmValidationException(localizedMessageBuilder, "IMPORT_INVALID_EXTENSION", "El archivo debe ser un XML");
-    }
+        String originalFilename = Optional.ofNullable(file.getOriginalFilename()).orElse("input.xml");
 
-    AncillaryImportJob job = new AncillaryImportJob();
-    try {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(decryptSapAncillaryTemp(file.getInputStream()));
-        doc.getDocumentElement().normalize();
-
+        // 1) Crear job en estado PENDING
+        AncillaryImportJob job = new AncillaryImportJob();
         job.setOriginalFilename(originalFilename);
         job.setFormat(format);
         job.setContinueOnError(continueOnError);
@@ -667,7 +672,202 @@ public void executeImportJob(Long jobId) {
         job.setErrorCount(0);
         job = jobRepository.save(job);
 
-        // 1. Validar y obtener PO_NUMBER (todos deben ser iguales)
+        // 2) Guardar archivo subido en STAGING (temporal) - no es el definitivo
+        try {
+            String inputDir = resultBasePath + "/inputs/staging";
+            Files.createDirectories(Path.of(inputDir));
+
+            String ext = Optional.ofNullable(FilenameUtils.getExtension(originalFilename))
+                    .filter(s -> !s.isBlank()).orElse("xml");
+
+            Path stagedPath = Path.of(inputDir, "job-" + job.getId() + "_staged." + ext);
+            file.transferTo(stagedPath.toFile());
+
+            // Guardamos la ruta de staging; será eliminada al finalizar el procesamiento real
+            job.setInputFilePath(stagedPath.toString());
+            jobRepository.save(job);
+        } catch (IOException e) {
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            recordJobError(job, "IMPORT_IO_ERROR", "No puede guardar archivo de entrada: " + e.getMessage());
+            throw new EqmValidationException(localizedMessageBuilder, "IMPORT_IO_ERROR",
+                    "No puede guardar archivo de entrada: " + e.getMessage());
+        }
+
+        // 3) Agendar procesamiento real después del commit
+        final Long jobId = job.getId();
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            @Override
+            public void afterCommit() {
+                executor.submit(() -> executeSapAncillaryTempJob(jobId));
+            }
+        });
+
+        // 4) Regresar inmediatamente el ID
+        return Optional.of(jobId);
+    }
+
+    @Transactional
+    public void executeSapAncillaryTempJob(Long jobId) {
+        AncillaryImportJob job = jobRepository.findById(jobId).orElse(null);
+        if (job == null) {
+            log.error("executeSapAncillaryTempJob: job {} no existe", jobId);
+            return;
+        }
+
+        boolean wasPgp = false;
+
+        try {
+            job.setStatus(AncillaryImportJob.JobStatus.PROCESSING);
+            job.setStartedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            // 1) Leer archivo STAGING guardado en fase de ingesta
+            Path stagedPath = Path.of(job.getInputFilePath());
+            byte[] uploadedBytes = Files.readAllBytes(stagedPath);
+
+            // 2) Detectar/descifrar PGP -> siempre producir xmlBytes "usable"
+            byte[] xmlBytes;
+            if (isAsciiArmoredPgp(uploadedBytes)) {
+                wasPgp = true;
+                try (InputStream privateKeyIn = getClass().getResourceAsStream("/keys/milicom_dev_secretkey.asc")) {
+                    if (privateKeyIn == null) {
+                        throw new IllegalStateException("No se encontró la clave PGP en /keys/milicom_dev_secretkey.asc");
+                    }
+                    xmlBytes = PgpDecryptUtil.decrypt(
+                            new ByteArrayInputStream(uploadedBytes), privateKeyIn, "Milicom2020");
+                    log.info("Job {}: archivo cifrado PGP descifrado OK.", jobId);
+                }
+            } else {
+                xmlBytes = uploadedBytes;
+                log.info("Job {}: archivo no PGP, se procesa como XML.", jobId);
+            }
+
+            // 3) Parsear XML
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new ByteArrayInputStream(xmlBytes));
+            doc.getDocumentElement().normalize();
+
+            // 4) Validar MOVE_TYPE (igual que antes)
+            Set<String> permitidos = Set.of("101", "303");
+            Set<String> encontrados = new HashSet<>();
+            NodeList moveTypeNodes = doc.getElementsByTagName("MOVE_TYPE");
+            for (int i = 0; i < moveTypeNodes.getLength(); i++) {
+                String mt = moveTypeNodes.item(i).getTextContent().trim();
+                encontrados.add(mt);
+                if (!permitidos.contains(mt)) {
+                    failJobAndThrow(job, "IMPORT_INVALID_MOVE_TYPE",
+                            String.format("MOVE_TYPE '%s' no permitido. Valores permitidos: %s", mt, permitidos));
+                }
+            }
+            if (encontrados.isEmpty()) {
+                failJobAndThrow(job, "IMPORT_MOVE_TYPE_MISSING", "No se encontró ningún nodo MOVE_TYPE en el XML.");
+            }
+            if (encontrados.size() > 1) {
+                failJobAndThrow(job, "IMPORT_MULTIPLE_MOVE_TYPE",
+                        String.format("Se encontraron múltiples MOVE_TYPE: %s. No está soportado.", encontrados));
+            }
+            String moveType = encontrados.iterator().next();
+
+            // 5) Crear carpeta MOVE-<type>
+            Path moveDir = Path.of(resultBasePath, "inputs", "MOVE-" + moveType);
+            Files.createDirectories(moveDir);
+
+            // 6) Construir nombre final: job-<id>-<basename(original)>.xml
+            String baseName = FilenameUtils.getBaseName(
+                    Optional.ofNullable(job.getOriginalFilename()).orElse("input"));
+            // Limpieza básica de nombre
+            baseName = baseName.replaceAll("[\\s]+", "_").replaceAll("[^A-Za-z0-9._-]", "");
+            String finalFileName = "job-" + job.getId() + "-" + baseName + ".xml";
+            Path finalPath = moveDir.resolve(finalFileName);
+
+            // 7) Escribir ÚNICO archivo final (XML usable)
+            Files.write(finalPath, xmlBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+            // 8) Actualizar ruta del job al archivo definitivo y borrar staging
+            job.setInputFilePath(finalPath.toString());
+            jobRepository.save(job);
+
+            try {
+                Files.deleteIfExists(stagedPath);
+            } catch (Exception delEx) {
+                log.warn("Job {}: no se pudo eliminar staging {}: {}", jobId, stagedPath, delEx.getMessage());
+            }
+
+            // 9) Enrutar por MOVE_TYPE (igual que antes)
+            switch (moveType) {
+                case "101":
+                    processMoveType101(doc, job.getOriginalFilename(), xmlBytes, job);
+                    break;
+                case "303":
+                    processMoveType303(doc, job.getOriginalFilename(), xmlBytes, job);
+                    break;
+                default:
+                    failJobAndThrow(job, "IMPORT_INVALID_MOVE_TYPE",
+                            String.format("MOVE_TYPE '%s' aún no está implementado.", moveType));
+            }
+
+        } catch (EqmValidationException ve) {
+            if (job.getId() != null && job.getFinishedAt() == null) {
+                job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+                job.setFinishedAt(LocalDateTime.now());
+                jobRepository.save(job);
+            }
+            throw ve;
+        } catch (Exception e) {
+            String code = "IMPORT_UNEXPECTED_ERROR";
+            String msg  = (e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName();
+
+            recordJobError(job, code, msg);
+
+            log.error("Job {} falló en executeSapAncillaryTempJob: {}", jobId, e.getMessage(), e);
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+        }
+    }
+
+
+    private String getText(Element parent, String tag) {
+        NodeList list = parent.getElementsByTagName(tag);
+        if (list.getLength() == 0) {
+            return null;
+        }
+        return list.item(0).getTextContent();
+    }
+
+    private void failJobAndThrow(AncillaryImportJob job, String errorCode, String message) {
+
+        // 1) registrar error global
+        recordJobError(job, errorCode, message);
+
+        // 2) cerrar el job
+        job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+        job.setFinishedAt(LocalDateTime.now());
+        jobRepository.save(job);
+
+        // 3) lanzar
+        throw new EqmValidationException(localizedMessageBuilder, errorCode, message);
+    }
+
+    private boolean isAsciiArmoredPgp(byte[] content) {
+        // Busca la cabecera típica de PGP ASCII armor
+        String head = new String(content, 0, Math.min(content.length, 200), StandardCharsets.US_ASCII);
+        return head.contains("-----BEGIN PGP MESSAGE-----");
+    }
+
+//Funcion cuando el MOVE_TYPE es 101
+// Funcion cuando el MOVE_TYPE es 101
+private Optional<Long> processMoveType101(Document doc,
+                                          String originalFilename,
+                                          byte[] uploadedBytes,
+                                          AncillaryImportJob job) {
+    try {
+        // (A) Validar PO_NUMBER (todos iguales)
         NodeList poNodes = doc.getElementsByTagName("PO_NUMBER");
         if (poNodes.getLength() == 0) {
             failJobAndThrow(job, "IMPORT_PO_NO_MISSING", "Falta el nodo PO_NUMBER en el XML");
@@ -679,114 +879,305 @@ public void executeImportJob(Long jobId) {
                 failJobAndThrow(job, "IMPORT_DIFFERENT_PO_NO", "Todos los registros deben tener el mismo PO_NUMBER");
             }
         }
-        if (poAncillaryEquipmentSapRepository.existsByPoNo(poNoValue)) {
-            failJobAndThrow(job, "IMPORT_PO_NO_EXISTS", "El PO_NO ya existe en la tabla maestra");
+        // OJO: ya NO bloqueamos por existsByPoNo(poNoValue), porque habrá 1 fila por MATERIAL.
+
+        // === (A.1) Validar que existan seriales con SERIALNO válido ===
+        NodeList serialNodesCheck = doc.getElementsByTagName("E1BP2017_GM_SERIALNUMBER");
+
+        boolean hasValidSerial = false;
+        for (int i = 0; i < serialNodesCheck.getLength(); i++) {
+            Element snEl = (Element) serialNodesCheck.item(i);
+            String serial = getText(snEl, "SERIALNO");
+            if (serial != null && !serial.isBlank()) {
+                hasValidSerial = true;
+                break;
+            }
         }
 
-        // 2. Mapear MATERIAL por MATDOC_ITM (puede haber varios modelos)
-        Map<String, String> itemToModel = new HashMap<>();
+        if (!hasValidSerial) {
+            // No se encontraron seriales -> responder 422 y devolver PO_NUMBER
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            // Registrar error en AncillaryImportError
+            recordJobError(
+                job,
+                "IMPORT_NO_SERIALS_FOUND",
+                String.format("No se encontraron seriales. PO_NUMBER: %s", poNoValue)
+            );
+
+            throw new EqmValidationException(
+                localizedMessageBuilder,
+                "IMPORT_NO_SERIALS_FOUND",
+                String.format("No se encontraron seriales. PO_NUMBER: %s", poNoValue)
+            );
+        }
+        // === Fin validación de seriales ===
+
+        // (B) Mapear ITEMs/MATERIAL por MATDOC_ITM; prevalidar homologación
+        Map<String, String> itemNoToMaterial = new LinkedHashMap<>(); // "0001" -> "1400002265"
+        Map<String, Long>   itemNoToModelId = new HashMap<>();        // "0001" -> equipmentModelId (si homologado y Enabled)
+        Map<String, String> itemToStorage = new HashMap<>();
+        Set<String>         invalidItems = new HashSet<>();           // sin homologación
+        Set<String>         disabledItems = new HashSet<>();          // homologado pero NO Enabled
+
         NodeList itemNodes = doc.getElementsByTagName("E1BP2017_GM_ITEM_CREATE");
         for (int i = 0; i < itemNodes.getLength(); i++) {
             Element itemEl = (Element) itemNodes.item(i);
             String material = getText(itemEl, "MATERIAL");
-            String itemNo = String.format("%04d", i + 1);
-            if (material != null && !material.isBlank()) {
-                String cleanedMaterial = material.trim().replaceFirst("^0+(?!$)", "");
-                itemToModel.put(itemNo, cleanedMaterial);
+            String storageLoc = getText(itemEl, "STGE_LOC"); // extraer el storage location
+            String itemNo = String.format("%04d", i + 1); // 0001, 0002, ...
 
-            }
-        }
-        if (itemToModel.isEmpty()) {
-            failJobAndThrow(job, "IMPORT_MODEL_MISSING", "No se encontró ningún MATERIAL en el XML");
-        }
-
-        // 3. Guardar PO en tabla maestra utilizando el primer modelo disponible
-        String modelValue = itemToModel.values().iterator().next();
-        PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
-        poEntity.setPoNo(poNoValue);
-        poEntity.setModel(modelValue);
-        poEntity.setStatus("init");
-        poEntity = poAncillaryEquipmentSapRepository.save(poEntity);
-        Long poId = poEntity.getId();
-
-        // 4. Insertar registros en equipments_temp
-        NodeList serialNodes = doc.getElementsByTagName("E1BP2017_GM_SERIALNUMBER");
-        int insertedCount = 0;
-        int totalRecords = 0;
-        for (int i = 0; i < serialNodes.getLength(); i++) {
-            totalRecords++;
-            Element snEl = (Element) serialNodes.item(i);
-            String serial = getText(snEl, "SERIALNO");
-            String matdoc = getText(snEl, "MATDOC_ITM");
-    
-            String nodeModel;
-            if (matdoc == null || matdoc.isBlank()) {
-                nodeModel = modelValue;
-            } else {
-                nodeModel = itemToModel.get(matdoc);
-                if (nodeModel == null) {
-                    failJobAndThrow(job, "IMPORT_INVALID_MATDOC", String.format("MATDOC_ITM='%s' no corresponde a ningún MATERIAL", matdoc));
-                }
-            }
-
-            if (serial == null || serial.isBlank() || nodeModel == null || nodeModel.isBlank()) {
-                failJobAndThrow(job, "IMPORT_MISSING_BOX_OR_MODEL",
-                        String.format("Faltan datos obligatorios: BOX_SN='%s', NODE_MODEL='%s'", serial, nodeModel));
-            }
-
-            if (equipmentTempRepository.existsByBoxSn(serial)) {
+            if (material == null || material.isBlank()) {
+                log.warn("ITEM {} sin MATERIAL. Se omitirá.", itemNo);
+                invalidItems.add(itemNo);
                 continue;
             }
 
+            String cleanedMaterial = material.trim().replaceFirst("^0+(?!$)", "");
+            itemNoToMaterial.put(itemNo, cleanedMaterial);
 
-            Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(nodeModel);
+            if (storageLoc != null && !storageLoc.isBlank()) {
+                itemToStorage.put(itemNo, storageLoc.trim());
+            }
+
+            Optional<HomologacionMaterialSap> homOpt = homologacionMaterialSapRepository.findByIdMaterialSap(cleanedMaterial);
             if (homOpt.isEmpty()) {
-                failJobAndThrow(job, "IMPORT_MODEL_NOT_FOUND",
-                        String.format("Modelo no homologado: NODE_MODEL='%s' no encontrado en homologacion_material_sap", nodeModel));
+                invalidItems.add(itemNo);
+                log.warn("ITEM {} MATERIAL {} sin homologación. Se insertará en temporal con status=error.", itemNo, cleanedMaterial);
+                continue;
             }
             HomologacionMaterialSap homologacion = homOpt.get();
-            if (!"Habilitado".equalsIgnoreCase(homologacion.getStatus())) {
-                failJobAndThrow(job, "IMPORT_MODEL_DISABLED",
-                        String.format("Modelo no homologado: NODE_MODEL='%s' no está Habilitado", nodeModel));
+            if (!"Enabled".equalsIgnoreCase(homologacion.getStatus())) {
+                disabledItems.add(itemNo);
+                log.warn("ITEM {} MATERIAL {} homologado pero NO Enabled. Se insertará en temporal con status=error.", itemNo, cleanedMaterial);
+                continue;
+            }
+            itemNoToModelId.put(itemNo, homologacion.getEquipmentModelId());
+        }
+
+        if (itemNoToMaterial.isEmpty()) {
+            failJobAndThrow(job, "IMPORT_MODEL_MISSING", "No se encontró ningún MATERIAL en el XML");
+        }
+
+        // (C) Insertar TODOS los materiales en la tabla maestra y mapear material -> poId
+        Map<String, Long> materialToPoId = new HashMap<>();
+        for (String materialValue : new LinkedHashSet<>(itemNoToMaterial.values())) {
+            PoAncillaryEquipmentSap poEntity = new PoAncillaryEquipmentSap();
+            poEntity.setPoNo(poNoValue);
+            poEntity.setModel(materialValue);
+            poEntity.setStatus("temporal");
+            poEntity = poAncillaryEquipmentSapRepository.save(poEntity);
+            materialToPoId.put(materialValue, poEntity.getId());
+        }
+
+        if (materialToPoId.isEmpty()) {
+            failJobAndThrow(job, "IMPORT_NO_VALID_ITEMS", "No fue posible registrar materiales en la tabla maestra del PO.");
+        }
+
+        // (D) Insertar en temporal usando el poId por MATERIAL
+        NodeList serialNodes = doc.getElementsByTagName("E1BP2017_GM_SERIALNUMBER");
+        int insertedCount = 0;   // insertados OK (status="temporal")
+        int totalRecords = 0;
+
+        // === NO INSERTADOS (skips hard) ===
+        int skippedByMissingData = 0;    // sin SERIALNO o sin MATDOC_ITM
+        int skippedByItemMapMissing = 0; // MATDOC_ITM no mapea a MATERIAL
+        int skippedByMissingPo = 0;      // sin poId para MATERIAL
+        int skippedByDuplicate = 0;      // serial duplicado en tabla
+
+        // === INSERTADOS CON STATUS=error (se insertan en temporal) ===
+        int errInsertedNotHomologated = 0; // sin homologación
+        int errInsertedDisabled = 0;       // homologado pero NO Enabled
+        int errInsertedUnmappedModel = 0;  // no mapeado a modelId (caso raro distinto de los 2 anteriores)
+
+        for (int i = 0; i < serialNodes.getLength(); i++) {
+            totalRecords++;
+            Element snEl = (Element) serialNodes.item(i);
+
+            String serial = getText(snEl, "SERIALNO");
+            String matdoc = getText(snEl, "MATDOC_ITM"); // 0001, 0002, ...
+
+            if (serial == null || serial.isBlank() || matdoc == null || matdoc.isBlank()) {
+                skippedByMissingData++;
+                log.warn("Serial omitido por datos faltantes: MATDOC_ITM='{}', SERIALNO='{}'", matdoc, serial);
+                continue; // NO INSERTA
             }
 
+            String materialForItem = itemNoToMaterial.get(matdoc);
+            String storageForItem = itemToStorage.get(matdoc);
+            if (materialForItem == null || materialForItem.isBlank()) {
+                skippedByItemMapMissing++;
+                log.warn("MATDOC_ITM '{}' no corresponde a MATERIAL válido.", matdoc);
+                continue; // NO INSERTA
+            }
+
+            Long poIdForMaterial = materialToPoId.get(materialForItem);
+            if (poIdForMaterial == null) {
+                skippedByMissingPo++;
+                log.warn("No se encontró poId para MATERIAL '{}' (MATDOC_ITM '{}').", materialForItem, matdoc);
+                continue; // NO INSERTA
+            }
+
+            Long modelId = itemNoToModelId.get(matdoc);
+
+            // === INSERTADOS CON STATUS=error ===
+            if (modelId == null) {
+                String status = "error";
+                String errorMessage;
+
+                if (invalidItems.contains(matdoc)) {
+                    errorMessage = "Sin homologar: " + materialForItem;
+                    errInsertedNotHomologated++;
+                } else if (disabledItems.contains(matdoc)) {
+                    errorMessage = "Homologado pero no Enabled: " + materialForItem;
+                    errInsertedDisabled++;
+                } else {
+                    errorMessage = "Item no mapeado a modelId: " + materialForItem;
+                    errInsertedUnmappedModel++;
+                }
+
+                // Se INSERTA en temporal con status=error
+                EquipmentTemp temp = new EquipmentTemp();
+                temp.setBoxSn(serial.trim());
+                temp.setPoAncillaryeqmSapId(poIdForMaterial);
+                temp.setStatus(status);
+                temp.setMessages(errorMessage);
+                temp.setStorageCurrent(storageForItem);
+                temp.setCreatedAt(LocalDateTime.now());
+                equipmentTempRepository.save(temp);
+
+                continue; // NO cuenta como "insertedCount" (éxito), pero SÍ fue insertado con error
+            }
+
+            // === Duplicados (NO INSERTA) ===
+            if (equipmentTempRepository.existsByBoxSn(serial.trim())) {
+                skippedByDuplicate++;
+                continue;
+            }
+
+            // === INSERTADO OK ===
             EquipmentTemp temp = new EquipmentTemp();
             temp.setBoxSn(serial.trim());
-            temp.setModelId(homologacion.getEquipmentModelId());
-            temp.setPoAncillaryeqmSapId(poId);
+            temp.setModelId(modelId);
+            temp.setPoAncillaryeqmSapId(poIdForMaterial); // poId del MATERIAL específico
             temp.setStatus("temporal");
+            temp.setStorageCurrent(storageForItem);
             temp.setCreatedAt(LocalDateTime.now());
             equipmentTempRepository.save(temp);
+
             insertedCount++;
         }
 
-        if (insertedCount == 0) {
-            failJobAndThrow(job, "IMPORT_NO_INSERTS", "No se pudo insertar ningún registro. Todos fueron omitidos por duplicados o datos inválidos.");
+        log.info("IMPORT 101 -> total={}, insertedOK={}, notInserted: missingData={}, noItemMap={}, noPO={}, duplicates={}, insertedAsError: notHomologated={}, disabled={}, unmappedModel={}",
+                totalRecords, insertedCount,
+                skippedByMissingData, skippedByItemMapMissing, skippedByMissingPo, skippedByDuplicate,
+                errInsertedNotHomologated, errInsertedDisabled, errInsertedUnmappedModel);
+
+        
+       if (insertedCount == 0) {
+            // Totales por categoría
+            int notInsertedTotal = skippedByMissingData + skippedByItemMapMissing + skippedByMissingPo + skippedByDuplicate;
+            int insertedWithErrorTotal = errInsertedNotHomologated + errInsertedDisabled + errInsertedUnmappedModel;
+
+            // Detalles para el mensaje
+            List<String> partesNoInsert = new ArrayList<>();
+            if (skippedByDuplicate > 0)      partesNoInsert.add(String.format("%d duplicados", skippedByDuplicate));
+            if (skippedByMissingData > 0)    partesNoInsert.add(String.format("%d con datos faltantes", skippedByMissingData));
+            if (skippedByItemMapMissing > 0) partesNoInsert.add(String.format("%d sin mapear MATDOC->MATERIAL", skippedByItemMapMissing));
+            if (skippedByMissingPo > 0)      partesNoInsert.add(String.format("%d sin PO/MATERIAL", skippedByMissingPo));
+
+            List<String> partesErrInsert = new ArrayList<>();
+            if (errInsertedNotHomologated > 0) partesErrInsert.add(String.format("%d sin homologación", errInsertedNotHomologated));
+            if (errInsertedDisabled > 0)       partesErrInsert.add(String.format("%d no Enabled", errInsertedDisabled));
+            if (errInsertedUnmappedModel > 0)  partesErrInsert.add(String.format("%d no mapeados (modelId)", errInsertedUnmappedModel));
+
+            String detallesNoInsert = partesNoInsert.isEmpty() ? "-" : String.join(", ", partesNoInsert);
+            String detallesErrInsert = partesErrInsert.isEmpty() ? "-" : String.join(", ", partesErrInsert);
+
+            String msg = String.format(
+                "No se insertó ningún registro válido. No insertados=%d: %s. Insertados con status=error=%d: %s.",
+                notInsertedTotal, detallesNoInsert, insertedWithErrorTotal, detallesErrInsert
+            );
+
+            // Marcar FAILED y guardar
+            job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+            job.setFinishedAt(LocalDateTime.now());
+            jobRepository.save(job);
+
+            // Registrar error (1 fila en AncillaryImportError)
+            recordJobError(job, "IMPORT_NO_INSERTS", msg);
+
+            // Ajustar contador final (no insertados + insertados con error)
+            job.setErrorCount(notInsertedTotal + insertedWithErrorTotal);
+            jobRepository.save(job);
+
+            throw new EqmValidationException(localizedMessageBuilder, "IMPORT_NO_INSERTS", msg);
         }
 
+
+
+        // (E) Guardar archivo original tal como llegó (opcional)
+        /*
         String inputDir = resultBasePath + "/inputs";
         Files.createDirectories(Path.of(inputDir));
-        String savedName = "job-" + job.getId() + "_" + originalFilename;
-        Path destination = Path.of(inputDir, savedName);
-        file.transferTo(destination.toFile());
-        job.setInputFilePath(destination.toString());
+        Path originalPath = Path.of(inputDir, "job-" + job.getId() + "_" + originalFilename);
+        Files.write(originalPath, uploadedBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        job.setInputFilePath(originalPath.toString());
+        */
 
-        if (insertedCount < totalRecords) {
-            job.setStatus(AncillaryImportJob.JobStatus.SUCCESS_WITH_ERRORS);
-        } else {
-            job.setStatus(AncillaryImportJob.JobStatus.SUCCESS);
-        }
+        // (F) Finalizar estado con RESUMEN ÚNICO correcto
         job.setFinishedAt(LocalDateTime.now());
+
+        int notInsertedTotal = skippedByMissingData + skippedByItemMapMissing + skippedByMissingPo + skippedByDuplicate;
+        int insertedWithErrorTotal = errInsertedNotHomologated + errInsertedDisabled + errInsertedUnmappedModel;
+
+        // Listas para construir mensaje
+        List<String> partesNoInsert = new ArrayList<>();
+        if (skippedByDuplicate > 0)           partesNoInsert.add(String.format("%d duplicados", skippedByDuplicate));
+        if (skippedByMissingData > 0)         partesNoInsert.add(String.format("%d con datos faltantes", skippedByMissingData));
+        if (skippedByItemMapMissing > 0)      partesNoInsert.add(String.format("%d sin mapear MATDOC→MATERIAL", skippedByItemMapMissing));
+        if (skippedByMissingPo > 0)           partesNoInsert.add(String.format("%d sin PO/MATERIAL", skippedByMissingPo));
+
+        List<String> partesErrInsert = new ArrayList<>();
+        if (errInsertedNotHomologated > 0)    partesErrInsert.add(String.format("%d sin homologación", errInsertedNotHomologated));
+        if (errInsertedDisabled > 0)          partesErrInsert.add(String.format("%d no Enabled", errInsertedDisabled));
+        if (errInsertedUnmappedModel > 0)     partesErrInsert.add(String.format("%d no mapeados (modelId)", errInsertedUnmappedModel));
+
+        if (notInsertedTotal > 0 || insertedWithErrorTotal > 0) {
+            StringBuilder resumen = new StringBuilder();
+            if (notInsertedTotal > 0) {
+                resumen.append(String.format("No se insertaron %d registro(s)", notInsertedTotal));
+                if (!partesNoInsert.isEmpty()) {
+                    resumen.append(": ").append(String.join(", ", partesNoInsert));
+                }
+                resumen.append(". ");
+            }
+            if (insertedWithErrorTotal > 0) {
+                resumen.append(String.format("Se insertaron %d con status=error", insertedWithErrorTotal));
+                if (!partesErrInsert.isEmpty()) {
+                    resumen.append(": ").append(String.join(", ", partesErrInsert));
+                }
+                resumen.append(".");
+            }
+
+            // ÚNICA fila en AncillaryImportError con el breakdown final (correcto)
+            recordJobError(job, "IMPORT_SUMMARY", resumen.toString());
+
+            // errorCount = no insertados + insertados con error
+            job.setErrorCount(notInsertedTotal + insertedWithErrorTotal);
+        }
+
+        job.setStatus((notInsertedTotal > 0 || insertedWithErrorTotal > 0)
+                ? AncillaryImportJob.JobStatus.SUCCESS_WITH_ERRORS
+                : AncillaryImportJob.JobStatus.SUCCESS);
+        job.setTotalLines(totalRecords);
+        job.setSuccessfulLines(insertedCount);
         jobRepository.save(job);
 
-        log.info("SAP_ANCILLARY_TEMP: PO {} registrado, archivo guardado, Job #{} SUCCESS", poNoValue, job.getId());
         return Optional.of(job.getId());
 
-    } catch (IOException | ParserConfigurationException | SAXException e) {
-        job.setStatus(AncillaryImportJob.JobStatus.FAILED);
-        job.setFinishedAt(LocalDateTime.now());
-        jobRepository.save(job);
-        throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
     } catch (EqmValidationException ve) {
         if (job.getId() != null) {
             job.setStatus(AncillaryImportJob.JobStatus.FAILED);
@@ -794,33 +1185,68 @@ public void executeImportJob(Long jobId) {
             jobRepository.save(job);
         }
         throw ve;
-    }
-    }
+    } catch (Exception e) {
+        job.setStatus(AncillaryImportJob.JobStatus.FAILED);
+        job.setFinishedAt(LocalDateTime.now());
+        jobRepository.save(job);
 
-    private String getText(Element parent, String tag) {
-        NodeList list = parent.getElementsByTagName(tag);
-        if (list.getLength() == 0) {
-            return null;
-        }
-        return list.item(0).getTextContent();
-    }
+        String code = "IMPORT_FILE_READ_ERROR";
+        String msg = "No puede guardar archivo de entrada: " + e.getMessage();
 
-    private InputStream decryptSapAncillaryTemp(InputStream encrypted) throws IOException {
-        try (InputStream keyIn = new ClassPathResource(SAP_SECRET_KEY_PATH).getInputStream()) {
-            PgpDecryptor decryptor = new PgpDecryptor(keyIn, SAP_PASSPHRASE.toCharArray());
-            byte[] plain = decryptor.decrypt(encrypted);
-            return new ByteArrayInputStream(plain);
-        } catch (PGPException e) {
-            throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
-        }
-    }
+        // Registrar error
+        recordJobError(job, code, msg);
 
-private void failJobAndThrow(AncillaryImportJob job, String errorCode, String message) {
-    job.setStatus(AncillaryImportJob.JobStatus.FAILED);
-    job.setFinishedAt(LocalDateTime.now());
-    jobRepository.save(job);
-    throw new EqmValidationException(localizedMessageBuilder, errorCode, message);
+        throw new EqmValidationException(localizedMessageBuilder, "IMPORT_FILE_READ_ERROR", e.getMessage());
+    }
 }
+
+
+//Funcion cuando el MOVE_TYPE es 303 EJEMPLO.
+private Optional<Long> processMoveType303(Document doc,
+                                          String originalFilename,
+                                          byte[] uploadedBytes,
+                                          AncillaryImportJob job) {
+    // TODO: Implementar reglas específicas para 303.
+    failJobAndThrow(job, "IMPORT_MOVE_TYPE_303_UNSUPPORTED",
+            "El MOVE_TYPE 303 está permitido pero su procesamiento aún no está implementado.");
+    return Optional.empty(); // inalcanzable
+}
+
+    private void recordJobError(AncillaryImportJob job, String errorCode, String message,
+                                Integer lineNumber, String originalLine) {
+        newTxTemplate().execute(status -> {
+
+
+            //Log Global para errores
+            log.warn("Fallo en el job {}: [{}] {}", 
+                  (job != null ? job.getId() : "null"), 
+                  (errorCode != null && !errorCode.isBlank()) ? errorCode : "UNKNOWN", 
+                  message);
+
+
+            AncillaryImportError err = new AncillaryImportError();
+            err.setJob(job);
+
+            Integer ln = lineNumber;          // evita comparar primitivo con null
+            if (ln == null) ln = 0;
+            err.setLineNumber(ln);
+
+            String code = (errorCode != null && !errorCode.isBlank()) ? errorCode : "UNKNOWN";
+            err.setErrorMessage("[" + code + "] " + message);
+            err.setOriginalLine(originalLine);
+            importErrorRepo.save(err);
+
+            int current = job.getErrorCount(); // si es int, nunca será null
+            job.setErrorCount(current + 1);
+            jobRepository.save(job);
+            return null;
+        });
+    }
+
+    private void recordJobError(AncillaryImportJob job, String errorCode, String message) {
+        recordJobError(job, errorCode, message, 0, null);
+    }
+
 
            
 }
