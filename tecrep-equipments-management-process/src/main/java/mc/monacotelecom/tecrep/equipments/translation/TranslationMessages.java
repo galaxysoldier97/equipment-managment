@@ -154,4 +154,5 @@ public final class TranslationMessages {
     public static final String IMPORT_NO_INSERTS = "import.no.inserts";
     public static final String IMPORT_PO_NO_MISSING = "import.po.no.missing";
     public static final String EXPORTER_REQUIRED_SEARCH_PARAM = "inventory.exporter.search.mandatory";
+    public static final String STANDARD_LOAD_ID_NOT_FOUND = "standard.load.id.not.found";
 }

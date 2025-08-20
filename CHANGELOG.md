@@ -1,5 +1,8 @@
 # tecrep-equipments-management changelog
 
+## 2.33.0
+* Added standard_load table and CRUD endpoints
+
 ## 2.31.0
 * Added PGP decryption for SAP_ANCILLARY_TEMP import using Milicom key
 
