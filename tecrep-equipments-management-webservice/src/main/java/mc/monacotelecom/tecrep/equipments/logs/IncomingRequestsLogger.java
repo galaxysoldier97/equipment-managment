@@ -11,6 +11,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration;
 import org.slf4j.MDC;
 
+import static mc.monacotelecom.tecrep.equipments.logs.LogUtils.getUserName;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -47,6 +49,7 @@ public class IncomingRequestsLogger {
 
         MDC.put("processName", processName);
         MDC.put("uti", uti);
+        MDC.put("user", getUserName());
 
         long startTime = System.currentTimeMillis();
 

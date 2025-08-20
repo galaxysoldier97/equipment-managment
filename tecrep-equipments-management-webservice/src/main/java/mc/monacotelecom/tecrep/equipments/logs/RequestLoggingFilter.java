@@ -5,6 +5,8 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import static mc.monacotelecom.tecrep.equipments.logs.LogUtils.getUserName;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,8 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } finally {
+            MDC.put("user", getUserName());
+
             long duration = System.currentTimeMillis() - startTime;
             int status = response.getStatus();
 

@@ -18,7 +18,7 @@
             <!-- Codificación de línea de log -->
             <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
               <!--   <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %X{processName}.%level: processName: %X{processName}, uti: %X{uti}, parameters: %msg%n</Pattern> -->
-                <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %X{processName}.%level: process: %X{processName}, uti: %X{uti}, parameters: %msg%n</Pattern>
+                <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %X{processName}.%level: process: %X{processName}, user: %X{user}, uti: %X{uti}, parameters: %msg%n</Pattern>
             </encoder>
 
             <!-- Política de rotación por día y limpieza de archivos > 7 días -->
@@ -36,7 +36,11 @@
     </springProfile>
 
     <springProfile name="!output-logs-as-json">
-        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %X{processName}.%level: process: %X{processName}, user: %X{user}, uti: %X{uti}, parameters: %msg%n</Pattern>
+            </encoder>
+        </appender>
         <root level="WARN">
             <appender-ref ref="CONSOLE"/>
         </root>
@@ -87,6 +91,9 @@
                                     "remote_host": "%X{req.remoteHost:-}",
                                     "user_agent": "%X{req.userAgent:-}",
                                     "query_string": "%X{req.queryString:-}"
+                                },
+                                "user": {
+                                    "name": "%X{user:-}"
                                 }
                             }
                         </pattern>
