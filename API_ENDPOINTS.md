@@ -431,3 +431,13 @@ Cuando se llama al endpoint `POST /api/v2/private/auth/ancillaryequipments/impor
 
 De este modo, el cliente siempre recibe de inmediato un `jobId`. Luego puede consultar periódicamente `/import/status/{jobId}` para ver el avance, obtener conteos y, cuando finalice, descargar el CSV con el desglose de filas exitosas y errores.  
 
+
+### ⚖️ **5. STANDARD LOADS**
+
+#### **V2** - `/api/v2/private/auth/standard-loads`
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/` | Listar cargas estándar (paginado) |
+| `GET` | `/{id}` | Obtener carga estándar por ID |
+| `POST` | `/` | Crear carga estándar |
+| `PUT` | `/{id}` | Actualizar carga estándar |
