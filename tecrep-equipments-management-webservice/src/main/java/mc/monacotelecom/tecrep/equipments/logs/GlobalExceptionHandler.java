@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static mc.monacotelecom.tecrep.equipments.logs.LogUtils.getUserName;
+
 import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -33,6 +35,7 @@ public class GlobalExceptionHandler {
 
         MDC.put("processName", processName);
         MDC.put("uti", uti);
+        MDC.put("user", getUserName());
 
         String errorMsg = ex.getBindingResult().getAllErrors().stream()
                 .map(e -> e.getDefaultMessage())
